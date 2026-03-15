@@ -1,0 +1,37 @@
+# Submission configuration for Stanford RNA 3D Folding 2
+
+# Model configuration
+model_type: "rnn"  # "rnn" or "cnn"
+input_dim: 4       # A, C, G, U
+hidden_dim: 128    # Hidden dimension
+output_dim: 3      # x, y, z coordinates
+
+# Model path
+model_path: "models/best_model.pth"
+
+# Inference configuration
+use_cuda: true
+batch_size: 32
+
+# Test data
+num_test_samples: 100  # For dummy data - replace with actual test data
+test_data_dir: "data/raw/test"  # Path to test data
+
+# Output configuration
+output_dir: "submissions"
+submission_prefix: "submission"
+
+# Post-processing
+normalize_predictions: false
+clip_values: false
+min_value: -10.0
+max_value: 10.0
+
+# Validation
+validate_predictions: true
+check_nan: true
+check_inf: true
+
+# Logging
+verbose: true
+save_intermediate: false

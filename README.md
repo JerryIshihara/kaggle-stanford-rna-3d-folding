@@ -45,19 +45,22 @@ pip install kaggle numpy pandas biopython scikit-learn torch
 
 ### 2. Download Data
 ```bash
+# Using the provided script (recommended)
+./scripts/download_data.sh
+
+# Or manually:
 # After joining competition on Kaggle website
 kaggle competitions download -c stanford-rna-3d-folding-2
-unzip stanford-rna-3d-folding-2.zip
+unzip stanford-rna-3d-folding-2.zip -d data/raw/
 ```
 
 ### 3. Basic Exploration
-```python
-import pandas as pd
-import numpy as np
+```bash
+# Start Jupyter notebook
+jupyter notebook notebooks/exploration.ipynb
 
-# Load sample submission to understand format
-sample = pd.read_csv('sample_submission.csv')
-print(sample.head())
+# Or run the data loader directly
+python -c "from src.data_loader import RNADataLoader; loader = RNADataLoader(); print('Available MSA files:', len(loader.list_msa_files()))"
 ```
 
 ## 🏗️ Project Structure
@@ -68,12 +71,22 @@ kaggle-stanford-rna-3d-folding/
 ├── data/                     # Competition data (gitignored)
 ├── notebooks/                # Jupyter notebooks for exploration
 ├── src/                      # Source code
+│   ├── __init__.py
 │   ├── data_loader.py       # Data loading utilities
-│   ├── preprocessing.py     # Data preprocessing
-│   ├── models/              # Model architectures
-│   └── evaluation.py        # Evaluation metrics
+│   ├── train.py             # Training script
+│   ├── submit.py            # Submission script
+│   └── models/              # Model architectures
+│       ├── __init__.py
+│       └── baseline.py      # Baseline models (RNN/CNN)
+├── configs/                  # Configuration files
+│   ├── train_config.yaml    # Training configuration
+│   └── submit_config.yaml   # Submission configuration
+├── scripts/                  # Utility scripts
+│   └── download_data.sh     # Data download script
 ├── experiments/             # Experiment tracking
-└── submissions/            # Submission files
+├── submissions/            # Submission files
+├── requirements.txt         # Python dependencies
+└── setup.sh                # Environment setup script
 ```
 
 ## 🔬 Technical Approaches
@@ -90,11 +103,35 @@ kaggle-stanford-rna-3d-folding/
 - Energy minimization constraints
 - Geometric constraints (bond lengths, angles)
 
+## 🚀 Quick Start
+
+### Train a Baseline Model
+```bash
+# Train with default configuration
+python src/train.py
+
+# Train with custom configuration
+python src/train.py --model_type cnn --batch_size 64 --learning_rate 0.0005
+
+# Train with custom config file
+python src/train.py --config configs/train_config.yaml
+```
+
+### Generate Submission
+```bash
+# Create submission with trained model
+python src/submit.py
+
+# Specify custom model
+python src/submit.py --model_path models/best_model.pth --output_dir my_submissions
+```
+
 ## 📈 Baseline Approaches
 
 1. **Simple Baseline**: Use existing tools like RNAfold/ViennaRNA for secondary structure
 2. **Template-Based**: Find similar structures in PDB database
 3. **Machine Learning**: Train on known RNA structures from PDB
+4. **Deep Learning**: Use provided RNN/CNN models for 3D coordinate prediction
 
 ## 🎮 Competition Timeline
 

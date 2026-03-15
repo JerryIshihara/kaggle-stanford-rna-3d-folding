@@ -1,0 +1,45 @@
+# Training configuration for Stanford RNA 3D Folding 2
+
+# Model configuration
+model_type: "rnn"  # "rnn" or "cnn"
+input_dim: 4       # A, C, G, U
+hidden_dim: 128    # Hidden dimension
+output_dim: 3      # x, y, z coordinates
+
+# Training configuration
+batch_size: 32
+learning_rate: 0.001
+num_epochs: 100
+weight_decay: 0.0001
+
+# Data configuration
+num_samples: 1000  # For dummy data - replace with actual data loading
+seq_len: 100       # Maximum sequence length
+num_workers: 4     # Data loading workers
+
+# Optimization
+use_cuda: true
+gradient_clip: 1.0  # Gradient clipping value
+
+# Scheduler
+scheduler_factor: 0.5
+scheduler_patience: 5
+
+# Early stopping
+patience: 10
+
+# Logging and saving
+use_wandb: false
+wandb_project: "rna-3d-folding"
+model_save_dir: "models"
+checkpoint_freq: 5  # Save checkpoint every N epochs
+
+# Experiment tracking
+experiment_name: "baseline_rnn"
+tags: ["baseline", "rnn", "initial"]
+
+# Data paths (to be updated with actual paths)
+data_dir: "data/raw"
+train_split: 0.8
+val_split: 0.1
+test_split: 0.1
