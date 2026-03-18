@@ -15,3 +15,7 @@ Store implementation plans before coding. Every iteration must produce a plan ar
 ```
 plans/plan_<ITERATION_ID>.md
 ```
+
+`<ITERATION_ID>` includes a 4-character disambiguator for parallel-safety, e.g. `IT004_m2k7`.
+Legacy IDs without a disambiguator (IT001, IT002) remain valid.
+Always append new rows to the **end** of the table above to minimize merge conflicts.

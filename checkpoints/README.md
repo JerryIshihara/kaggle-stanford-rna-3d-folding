@@ -16,7 +16,11 @@ Store saved model weights, training states, and ensemble artifacts with full tra
 checkpoints/<ITERATION_ID>_<description>.pt
 ```
 
+`<ITERATION_ID>` includes a 4-character disambiguator for parallel-safety, e.g. `IT004_m2k7`.
+Legacy IDs without a disambiguator remain valid.
+Always append new rows to the **end** of the table above to minimize merge conflicts.
+
 Examples:
-- `checkpoints/IT002_best_fold0.pt`
-- `checkpoints/IT002_best_fold1.pt`
-- `checkpoints/IT002_ensemble_v1.pt`
+- `checkpoints/IT004_m2k7_best_fold0.pt`
+- `checkpoints/IT004_m2k7_best_fold1.pt`
+- `checkpoints/IT005_b3x8_ensemble_v1.pt`

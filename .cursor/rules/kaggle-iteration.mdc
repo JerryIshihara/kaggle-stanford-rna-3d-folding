@@ -33,13 +33,30 @@ At the beginning of every session:
 
 1. Read `iteration_registry.md` to understand current state.
 2. Read `submissions/scoreboard.md` to know the current best score.
-3. Identify the next iteration ID (increment from the last entry).
+3. Generate a new iteration ID:
+   a. Find the highest `<NNN>` in the registry and increment by 1.
+   b. Generate a random 4-character lowercase alphanumeric disambiguator.
+   c. Combine into `IT<NNN>_<XXXX>` (e.g. `IT004_m2k7`).
 4. Determine the highest-value next action using the priority order below.
 
 ## Iteration ID Format
 
-- IT001, IT002, IT003, ...
-- Always zero-pad to three digits.
+- Pattern: `IT<NNN>_<XXXX>` where `<NNN>` is a zero-padded three-digit sequence number
+  and `<XXXX>` is a 4-character lowercase alphanumeric disambiguator.
+- The disambiguator MUST be generated randomly at the start of each iteration
+  (e.g. using the first 4 hex characters of a random UUID or hash of timestamp + random bits).
+- Examples: `IT003_a7f2`, `IT004_k9m1`, `IT010_b3x8`.
+- The sequence number `<NNN>` is best-effort: read the registry, pick the next number.
+  Two agents may pick the same `<NNN>` — the disambiguator guarantees uniqueness.
+- Legacy IDs without a disambiguator (IT001, IT002, IT003) remain valid and should
+  not be renamed.
+
+### Why the disambiguator exists
+
+Multiple agents may run iterations in parallel. Without a disambiguator, two agents
+that both read the registry at the same time would create identically-named files
+(e.g. both create `research/research_IT003.md`), causing write conflicts and
+data loss. The random suffix makes every iteration's file set globally unique.
 
 ## 6-Phase Iteration Cycle
 
@@ -122,7 +139,8 @@ Then update ALL of the following:
 
 When a validated improvement is ready for Kaggle submission:
 
-1. Create submission ID: SUB001, SUB002, ...
+1. Create submission ID: `SUB<NNN>_<XXXX>` (same disambiguator rules as iteration IDs).
+   Example: `SUB001_r4t8`.
 2. Create `submissions/submission_<SUB_ID>.py` (or .ipynb) combining selected module versions.
 3. Create `submissions/submission_<SUB_ID>.md` with full traceability metadata.
 4. Update `submissions/README.md` and `submissions/scoreboard.md`.
@@ -184,16 +202,41 @@ an iteration ID and report.
 
 ## File Naming Conventions
 
-| Artifact | Pattern |
-|----------|---------|
-| Research | `research/research_<ID>.md` |
-| Plan | `plans/plan_<ID>.md` |
-| Report | `reports/report_<ID>.md` |
-| Module code | `<module>/<descriptive_name>_<ID>.py` |
-| Checkpoint | `checkpoints/<ID>_<description>.pt` |
-| Submission notebook | `submissions/submission_<SUB_ID>.ipynb` |
-| Submission script | `submissions/submission_<SUB_ID>.py` |
-| Submission docs | `submissions/submission_<SUB_ID>.md` |
+`<ID>` below means the full iteration ID including disambiguator, e.g. `IT004_m2k7`.
+`<SUB_ID>` means the full submission ID, e.g. `SUB002_r4t8`.
+
+| Artifact | Pattern | Example |
+|----------|---------|---------|
+| Research | `research/research_<ID>.md` | `research/research_IT004_m2k7.md` |
+| Plan | `plans/plan_<ID>.md` | `plans/plan_IT004_m2k7.md` |
+| Report | `reports/report_<ID>.md` | `reports/report_IT004_m2k7.md` |
+| Module code | `<module>/<descriptive_name>_<ID>.py` | `data_processor/features_IT004_m2k7.py` |
+| Checkpoint | `checkpoints/<ID>_<description>.pt` | `checkpoints/IT004_m2k7_best_fold0.pt` |
+| Submission notebook | `submissions/submission_<SUB_ID>.ipynb` | `submissions/submission_SUB002_r4t8.ipynb` |
+| Submission script | `submissions/submission_<SUB_ID>.py` | `submissions/submission_SUB002_r4t8.py` |
+| Submission docs | `submissions/submission_<SUB_ID>.md` | `submissions/submission_SUB002_r4t8.md` |
+
+### Parallel-Safety Rules for Shared Files
+
+The following files are edited by every iteration and are prone to merge conflicts
+when agents run in parallel:
+
+- `iteration_registry.md`
+- `research/README.md`, `plans/README.md`, `reports/README.md`
+- `submissions/README.md`, `submissions/scoreboard.md`
+- `checkpoints/README.md`
+- Module READMEs (`data_processor/README.md`, etc.)
+
+To minimize conflicts:
+
+1. **Append-only**: Always add new entries at the **end** of tables and lists. Never
+   reorder, renumber, or rewrite existing entries.
+2. **Section separators**: Use `---` between registry entries so git can auto-merge
+   non-adjacent additions.
+3. **Small, isolated edits**: Keep each append as a single contiguous block at the
+   end of the file so that two parallel appends touch different lines.
+4. **No counters or totals**: Do not maintain running counts or "last updated"
+   timestamps in shared files — these create guaranteed conflicts.
 
 ## Validity Rules
 

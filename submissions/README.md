@@ -18,6 +18,9 @@ submissions/submission_<SUBMISSION_ID>.py    (optional)
 submissions/submission_<SUBMISSION_ID>.md
 ```
 
+`<SUBMISSION_ID>` includes a 4-character disambiguator for parallel-safety, e.g. `SUB001_r4t8`.
+Always append new rows to the **end** of the table above to minimize merge conflicts.
+
 ## Links
 
 - [Scoreboard](scoreboard.md)
