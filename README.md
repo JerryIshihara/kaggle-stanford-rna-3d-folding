@@ -1,206 +1,73 @@
-# Stanford RNA 3D Folding 2 - Kaggle Competition
+# Stanford RNA 3D Folding 2 — Kaggle Competition Pipeline
 
-## 🧬 Competition Overview
+## Competition
 
-**Competition:** Stanford RNA 3D Folding 2  
-**Deadline:** March 25, 2026  
-**Prize Pool:** $75,000 USD  
-**Category:** Featured  
-**Current Teams:** ~1,990  
-**Competition URL:** https://www.kaggle.com/competitions/stanford-rna-3d-folding-2
+- **Name**: Stanford RNA 3D Folding 2
+- **URL**: https://www.kaggle.com/competitions/stanford-rna-3d-folding-2
+- **Metric**: RMSD (Root Mean Square Deviation) — lower is better
+- **Deadline**: March 25, 2026 (23:59 UTC)
+- **Prize Pool**: $75,000 USD
 
-## 🎯 Problem Statement
+## Current Best
 
-Predict the 3D structure of RNA molecules from their nucleotide sequences. This is a fundamental challenge in computational biology with applications in drug discovery, disease understanding, and synthetic biology.
+- **Best Score**: N/A (bootstrap phase)
+- **Best Submission ID**: N/A
+- **Best Module Combination**: N/A
 
-### Key Challenge
-RNA molecules fold into complex 3D structures that determine their biological function. Predicting these structures from sequence alone remains a difficult problem in bioinformatics.
-
-## 📊 Evaluation Metric
-
-The competition uses **Root Mean Square Deviation (RMSD)** between predicted and actual atomic coordinates to evaluate submissions. Lower RMSD values indicate better predictions.
-
-## 📁 Dataset Structure
-
-The dataset includes:
-- **MSA files**: Multiple Sequence Alignment files for evolutionary information
-- **RNA sequences**: Primary nucleotide sequences
-- **3D structures**: Ground truth atomic coordinates for training
-
-### File Structure:
-```
-MSA/           # Multiple Sequence Alignment files (.fasta)
-train/         # Training data
-test/          # Test data for submission
-sample_submission.csv  # Submission format
-```
-
-## 🚀 Getting Started
-
-### 1. Prerequisites
-```bash
-# Install required packages
-pip install kaggle numpy pandas biopython scikit-learn torch
-```
-
-### 2. Download Data
-```bash
-# Using the provided script (recommended)
-./scripts/download_data.sh
-
-# Or manually:
-# After joining competition on Kaggle website
-kaggle competitions download -c stanford-rna-3d-folding-2
-unzip stanford-rna-3d-folding-2.zip -d data/raw/
-```
-
-### 3. Basic Exploration
-```bash
-# Start Jupyter notebook
-jupyter notebook notebooks/exploration.ipynb
-
-# Or run the data loader directly
-python -c "from src.data_loader import RNADataLoader; loader = RNADataLoader(); print('Available MSA files:', len(loader.list_msa_files()))"
-```
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 kaggle-stanford-rna-3d-folding/
-├── README.md                 # This file
-├── data/                     # Competition data (gitignored)
-├── notebooks/                # Jupyter notebooks for exploration
-├── src/                      # Source code
-│   ├── __init__.py
-│   ├── data_loader.py       # Data loading utilities
-│   ├── train.py             # Training script
-│   ├── submit.py            # Submission script
-│   └── models/              # Model architectures
-│       ├── __init__.py
-│       └── baseline.py      # Baseline models (RNN/CNN)
-├── configs/                  # Configuration files
-│   ├── train_config.yaml    # Training configuration
-│   └── submit_config.yaml   # Submission configuration
-├── scripts/                  # Utility scripts
-│   └── download_data.sh     # Data download script
-├── experiments/             # Experiment tracking
-├── submissions/            # Submission files
-├── requirements.txt         # Python dependencies
-└── setup.sh                # Environment setup script
+├── README.md                  # This file
+├── iteration_registry.md      # Global iteration log
+├── requirements.txt           # Python dependencies
+├── setup.sh                   # Environment setup
+├── configs/                   # YAML configuration files
+├── scripts/                   # Utility and orchestration scripts
+├── src/                       # Legacy source code (untouched)
+│   └── AGENT_RULES.md        # Agent iteration protocol
+├── data_processor/            # Data loading, feature engineering, dataset building
+├── inferencer/                # Model architectures, inference, ensembling
+├── optimizer/                 # Training loops, losses, schedulers
+├── validator/                 # CV splits, metrics, evaluation
+├── checkpoints/               # Saved model weights and training states
+├── research/                  # Research artifacts per iteration
+├── plans/                     # Implementation plans per iteration
+├── reports/                   # Evaluation reports per iteration
+└── submissions/               # Kaggle-ready submission assemblies
 ```
 
-## 🔬 Technical Approaches
+## Module Overview
 
-### Potential Methods:
-1. **Deep Learning Models**: Graph Neural Networks (GNNs), Transformers
-2. **Physics-Based Methods**: Molecular dynamics simulations
-3. **Hybrid Approaches**: Combining evolutionary information with deep learning
-4. **Ensemble Methods**: Combining multiple prediction methods
+| Module | Purpose | README |
+|--------|---------|--------|
+| data_processor | Data loading, cleaning, feature engineering, dataset building | [data_processor/README.md](data_processor/README.md) |
+| inferencer | Model architecture, forward/inference logic, post-processing | [inferencer/README.md](inferencer/README.md) |
+| optimizer | Training loop, loss functions, schedulers, checkpoint policy | [optimizer/README.md](optimizer/README.md) |
+| validator | Cross-validation, metrics, split generation, ablation | [validator/README.md](validator/README.md) |
 
-### Key Features:
-- Evolutionary information from MSA
-- Secondary structure predictions
-- Energy minimization constraints
-- Geometric constraints (bond lengths, angles)
+## Iteration Index
 
-## 🚀 Quick Start
+See [iteration_registry.md](iteration_registry.md) for the full iteration log.
 
-### Train a Baseline Model
-```bash
-# Train with default configuration
-python src/train.py
+### Promoted Improvements
 
-# Train with custom configuration
-python src/train.py --model_type cnn --batch_size 64 --learning_rate 0.0005
+| Iteration | Module | Description | Score Impact |
+|-----------|--------|-------------|-------------|
+| *(none yet)* | | | |
 
-# Train with custom config file
-python src/train.py --config configs/train_config.yaml
-```
+### Rejected Ideas
 
-### Generate Submission
-```bash
-# Create submission with trained model
-python src/submit.py
+| Iteration | Module | Description | Reason |
+|-----------|--------|-------------|--------|
+| *(none yet)* | | | |
 
-# Specify custom model
-python src/submit.py --model_path models/best_model.pth --output_dir my_submissions
-```
+## Links
 
-## 📈 Baseline Approaches
-
-1. **Simple Baseline**: Use existing tools like RNAfold/ViennaRNA for secondary structure
-2. **Template-Based**: Find similar structures in PDB database
-3. **Machine Learning**: Train on known RNA structures from PDB
-4. **Deep Learning**: Use provided RNN/CNN models for 3D coordinate prediction
-
-## 🎮 Competition Timeline
-
-- **Start**: January 2026
-- **Deadline**: March 25, 2026
-- **Final Submission**: March 25, 2026 (23:59 UTC)
-
-## 🏆 Prizes
-
-- **1st Place**: $30,000
-- **2nd Place**: $20,000  
-- **3rd Place**: $15,000
-- **4th-10th Place**: $10,000 total
-
-## 🔗 Useful Resources
-
-### Documentation
-- [Kaggle Competition Page](https://www.kaggle.com/competitions/stanford-rna-3d-folding-2)
-- [RNA 3D Structure Prediction Review](https://www.nature.com/articles/s41576-019-0203-6)
-- [RosettaRNA Documentation](https://www.rosettacommons.org/docs/latest/application_documentation/rna/rosetta-rna)
-
-### Tools & Libraries
-- [ViennaRNA](https://www.tbi.univie.ac.at/RNA/) - RNA secondary structure prediction
-- [Rosetta](https://www.rosettacommons.org/) - Molecular modeling suite
-- [Biopython](https://biopython.org/) - Biological computation in Python
-- [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/) - GNNs for molecular data
-
-### Datasets
-- [Protein Data Bank (PDB)](https://www.rcsb.org/) - Repository of 3D biological structures
-- [RNAcentral](https://rnacentral.org/) - Non-coding RNA sequences
-
-## 👥 Team Collaboration
-
-This repository is set up for collaborative work on the competition. Use branches for different approaches and merge successful experiments.
-
-### Git Workflow:
-```bash
-# Create feature branch
-git checkout -b feature/new-model
-
-# Work on changes
-# ...
-
-# Commit and push
-git add .
-git commit -m "Add new model architecture"
-git push origin feature/new-model
-
-# Create pull request when ready
-```
-
-## 📝 Submission Instructions
-
-1. Generate predictions in the required format
-2. Create submission file `submission.csv`
-3. Submit via Kaggle CLI:
-   ```bash
-   kaggle competitions submit -c stanford-rna-3d-folding-2 -f submission.csv -m "Description"
-   ```
-
-## 🚨 Important Notes
-
-- **Data Privacy**: Competition data should not be shared publicly
-- **Compute Resources**: RNA 3D prediction can be computationally intensive
-- **Validation**: Use proper cross-validation to avoid overfitting
-- **Ensembling**: Consider ensemble methods for final submission
-
----
-
-**Good luck with the competition!** 🧬🚀
-
-*Last updated: March 15, 2026*
+- [Iteration Registry](iteration_registry.md)
+- [Checkpoints README](checkpoints/README.md)
+- [Research README](research/README.md)
+- [Plans README](plans/README.md)
+- [Reports README](reports/README.md)
+- [Submissions README](submissions/README.md)
+- [Scoreboard](submissions/scoreboard.md)
