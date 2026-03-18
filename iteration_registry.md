@@ -40,3 +40,33 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Report**: [reports/report_IT001.md](reports/report_IT001.md)
 - **Checkpoints**: None (structural iteration)
 - **Status**: PROMOTED
+
+---
+
+### IT002 — Competition Analysis and Template Pipeline
+
+- **Iteration ID**: IT002
+- **Title**: Competition landscape analysis and template-based pipeline implementation
+- **Module**: All modules — strategic direction and template implementation
+- **Files**:
+  - `data_processor/template_db.py`
+  - `inferencer/template_model.py`
+  - `scripts/download_pdb_rna.py`
+  - `scripts/build_template_db.py`
+- **Functions / Features**:
+  - `PDBRNADatabase` (download, build, search, align templates)
+  - `RNAStructureAligner` (TM-score, structural alignment, sequence identity)
+  - `TemplateModel` (predict, ensemble_predict)
+  - `TemplateEnsemble` (weighted_average, consensus_structure)
+  - Enhanced `RNADataLoader` with template functionality
+- **Description**: Analyze competition leaderboard, identify template-based approach as current best performer, implement complete template prediction pipeline.
+- **Motivation**: Leverage proven approach (template-based) for quick score improvement with 7 days remaining until deadline.
+- **Sources**:
+  - Competition leaderboard analysis (March 18, 2026)
+  - Top team: "best_template_oracle" (0.554 RMSD)
+  - Recent RNA structure prediction literature (2024-2026)
+- **Research**: [research/research_IT002.md](research/research_IT002.md)
+- **Plan**: [plans/plan_IT002.md](plans/plan_IT002.md)
+- **Report**: [reports/report_IT002.md](reports/report_IT002.md) *(pending)*
+- **Checkpoints**: Template database, trained alignment models
+- **Status**: IN PROGRESS
