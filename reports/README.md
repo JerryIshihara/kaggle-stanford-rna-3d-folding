@@ -13,5 +13,11 @@ Store evaluation results after implementation. Every iteration must produce a re
 ## Filename Convention
 
 ```
-reports/report_<ITERATION_ID>.md
+reports/report_<ITERATION_ID>_<topic_slug>.md
 ```
+
+- `<topic_slug>`: short lowercase underscore-separated descriptor (2–4 words, `[a-z0-9_]` only).
+- The topic slug prevents merge conflicts when parallel agents create report files simultaneously.
+- Example: `reports/report_IT003_template_pipeline.md`
+
+> Legacy files (IT001) omit the topic slug and keep their original names.
