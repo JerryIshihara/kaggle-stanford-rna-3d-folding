@@ -35,6 +35,20 @@
 - **RMSD** [IT001]: Root Mean Square Deviation of atomic positions. Lower is better. Originally thought to be the competition metric (incorrect -- it is TM-score). Still useful as a training loss proxy.
 - **Sequence identity** [IT002]: Fraction of aligned positions with matching nucleotides. Used to weight templates and filter poor matches.
 
+## Feature Normalization [SUB002]
+
+- **Coordinate normalization**: PDB coordinates range from roughly -100 to +100 Angstroms. Feeding raw coordinates into Conv1d layers (initialized with small random weights) causes numerical overflow. **Critical: always center and scale coordinates before neural network input.**
+  - Implementation: `centroid = coords.mean(axis=0); scale = std(coords - centroid) + 1e-8; normed = (coords - centroid) / scale`
+  - Denormalize after prediction: `coords = normed * scale + centroid`
+  - Ground truth must be normalized with the **same** centroid and scale as the template (not independently), so the model learns relative corrections.
+
+## Normalization Layers [SUB002]
+
+- **BatchNorm1d pitfall**: With batch_size=1 (common when each training sample has different sequence length), BatchNorm computes statistics from a single sample. The running variance can become degenerate, leading to division by near-zero and inf/NaN outputs. **Never use BatchNorm1d when effective batch size is 1.**
+- **InstanceNorm1d(affine=True)**: Computes statistics per-sample per-channel across the spatial dimension (sequence length). Works correctly regardless of batch size. The `affine=True` parameter adds learnable scale/shift, making it as expressive as BatchNorm without the batch dependency.
+- **GroupNorm**: Another batch-size-independent alternative. Groups channels and normalizes within each group. Good middle ground between Instance and Layer normalization.
+- **Source**: SUB001 post-mortem; loss was inf for all 25 epochs due to BatchNorm1d with B=1 combined with unnormalized coordinates.
+
 ## Cross-Validation [IT001]
 
 - **Simple K-Fold**: Random splits. Fast but may have leakage if sequences are homologous.
