@@ -10,6 +10,7 @@ Store implementation plans before coding. Every iteration must produce a plan ar
 |------|-------------|-------------------|--------------|
 | [plan_IT001.md](plan_IT001.md) | IT001 | All | Full pipeline bootstrap: directories, code, docs, agent rules |
 | [plan_IT002.md](plan_IT002.md) | IT002 | data_processor, inferencer | Template-based pipeline: PDB database, alignment, coordinate transfer |
+| [plan_IT005_fragment_assembly.md](plan_IT005_fragment_assembly.md) | IT005 | inferencer | Fragment assembly, per-chain prediction, coverage-weighted scoring |
 
 ## Filename Convention
 

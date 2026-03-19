@@ -57,6 +57,24 @@ All URLs, papers, notebooks, and references encountered across iterations. Tagge
 
 Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.554. Tight competition.
 
+## Competition Leaderboard and Public Notebooks (March 19, 2026) [IT005]
+
+| Approach | Score | Source |
+|----------|-------|--------|
+| best_template_oracle | 0.554 | Leaderboard top |
+| Protenix+TBM (nihilisticneuralnet) | 0.409 | https://www.kaggle.com/code/nihilisticneuralnet/0-409-stanford-rna-folding-2-protenix-template |
+| DRfold2 alone | ~0.40 | Discussion threads |
+| Our SUB004 | 0.211 | Template matching only |
+
+## New Sources [IT005]
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| 0.409 Protenix+Template notebook | https://www.kaggle.com/code/nihilisticneuralnet/0-409-stanford-rna-folding-2-protenix-template | IT005 | Top-scoring public notebook using Protenix+TBM |
+| DRfold2 (PLOS Biology 2026) | https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3003659 | IT005 | Deep learning RNA folding, ~0.40 TM on public test |
+| RNA-align (Bioinformatics 2019) | https://academic.oup.com/bioinformatics/article/35/21/4459/5480133 | IT005 | TM-score computation for RNA 3D structure alignment |
+| DRfold2 GitHub | https://github.com/leeyang/drfold2 | IT005 | Open source DRfold2 implementation |
+
 ## Internal Debugging Insights [SUB001 -> SUB002]
 
 | Finding | Source | Impact |

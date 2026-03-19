@@ -40,6 +40,35 @@
 - **Edge case**: For terminal gaps (no left or right neighbor), extrapolates using estimated local backbone direction.
 - **Use in pipeline**: After coordinate transfer from template to query via alignment, gapped positions (insertions relative to template) need coordinates. Interpolation provides reasonable initial guesses.
 
+## Fragment-Based Assembly [IT005]
+
+- **What**: Splits long sequences into overlapping fragments, finds best template per fragment, transfers coordinates per fragment, and stitches them together using Kabsch superposition on overlapping regions.
+- **How it works**:
+  1. Split query into fragments of size F (100nt) with overlap O (30nt)
+  2. For each fragment, run template search independently (smaller sequences match better)
+  3. Transfer coordinates per fragment using NW alignment
+  4. For each subsequent fragment, use Kabsch superposition on the overlapping region to align it to the already-placed coordinates
+  5. In overlap regions, blend coordinates with position-weighted averaging
+- **Complexity**: O(K * F * T) per fragment where K is number of fragments, F is fragment size, T is template search cost
+- **Use in pipeline**: For long RNA chains (>200nt) where no good full-length template exists, fragment assembly provides better coordinate coverage than a single poor full-length template.
+- **Key parameters**: FRAGMENT_SIZE=100, FRAGMENT_OVERLAP=30, FRAGMENT_MIN_SIM=0.15
+- **Source**: Inspired by Rosetta (protein structure prediction) and I-TASSER fragment assembly approaches.
+
+## Affine Gap Penalties [IT005]
+
+- **What**: Extension of NW alignment where gap opening and gap extension have different penalties.
+- **Gap open**: -4 (cost to start a new gap)
+- **Gap extend**: -1 (cost to extend an existing gap)
+- **Why**: In RNA, insertions/deletions tend to occur as contiguous blocks (e.g., loops). Affine gaps model this better than linear gap penalties.
+- **Use in pipeline**: Replaces the linear gap penalty (-2) used in IT002-IT004.
+
+## Coverage-Weighted Template Scoring [IT005]
+
+- **What**: Template quality metric that combines sequence similarity with coverage and length compatibility.
+- **Formula**: `score = nw_similarity × sqrt(min(qlen, tlen) / max(qlen, tlen)) × valid_fraction`
+- **Why**: A template with 90% sequence identity but only 30% length coverage is worse than one with 70% identity and 95% coverage.
+- **Use in pipeline**: Replaces simple NW-score-only ranking from IT002-IT004.
+
 ## Sequence Identity [IT002]
 
 - **What**: Fraction of aligned positions where both sequences have the same nucleotide.

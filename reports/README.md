@@ -10,6 +10,7 @@ Store evaluation results after implementation. Every iteration must produce a re
 |------|-------------|---------|---------|
 | [report_IT001.md](report_IT001.md) | IT001 | PROMOTED | Pipeline bootstrap completed successfully |
 | [report_IT002.md](report_IT002.md) | IT002 | PROMOTED | Template-based pipeline implemented, core logic verified |
+| [report_IT005_fragment_assembly.md](report_IT005_fragment_assembly.md) | IT005 | NEEDS_FOLLOWUP | Fragment assembly + per-chain prediction, awaiting Kaggle results |
 
 ## Filename Convention
 

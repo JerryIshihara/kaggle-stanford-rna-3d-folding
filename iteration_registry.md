@@ -72,3 +72,52 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Report**: [reports/report_IT002.md](reports/report_IT002.md)
 - **Checkpoints**: None yet (template database pending download)
 - **Status**: PROMOTED
+
+---
+
+### IT003 — Train-Data Template Library (SUB003-SUB004)
+
+- **Iteration ID**: IT003
+- **Title**: Train-data template library — using competition data as templates
+- **Module**: inferencer (template matching pipeline)
+- **Files**: `submissions/submission_SUB003.ipynb`, `submissions/submission_SUB004.ipynb`
+- **Description**: Switched from external PDB template database to using competition's own training data (2671 templates). Implemented k-mer prefilter, NW alignment, chain-aware prediction, RNA structural constraints.
+- **Motivation**: External PDB approach failed (no internet, missing data). Training data has C1' coordinates for 2671 sequences.
+- **Status**: PROMOTED (SUB004 scored 0.211 TM on public LB)
+
+---
+
+### IT004 — Multi-Template Diversity (SUB005)
+
+- **Iteration ID**: IT004
+- **Title**: Multi-template diverse prediction with Kabsch blending
+- **Module**: inferencer (prediction pipeline)
+- **Files**: `submissions/submission_SUB005.ipynb` (Kaggle: stanford-rna-3d-template-refinement)
+- **Description**: Use 5 different templates for 5 prediction slots, similarity-weighted template blending with Kabsch superposition, RNA-specific alignment scoring (transition/transversion), helical gap interpolation.
+- **Motivation**: Improve diversity and quality of best-of-5 predictions over SUB004.
+- **Status**: RUNNING (submitted to Kaggle, awaiting results)
+
+---
+
+### IT005 — Fragment Assembly + Per-Chain Prediction (SUB006)
+
+- **Iteration ID**: IT005
+- **Title**: Fragment-based assembly, per-chain prediction, coverage-weighted scoring
+- **Module**: inferencer (prediction pipeline)
+- **Files**: `submissions/submission_SUB006.ipynb` (Kaggle: stanford-rna-3d-fragment-assembly)
+- **Functions / Features**:
+  - `predict_single_chain` — independent per-chain template matching
+  - `predict_complex` — assembles per-chain predictions into full complex
+  - `fragment_assembly` — splits long chains into overlapping fragments, finds templates per fragment, stitches via Kabsch superposition
+  - `find_templates_for_chain` — coverage-weighted template scoring (similarity × coverage × length ratio)
+  - Affine gap NW alignment with RNA-specific transition/transversion scoring
+- **Description**: Major architectural improvement: predict each chain independently (not full complex), use fragment assembly for long chains without good full-length templates, coverage-weighted template selection.
+- **Motivation**: SUB004 matched full concatenated sequences against templates, producing poor matches for multi-chain targets. Per-chain matching + fragment assembly should significantly improve coverage.
+- **Sources**:
+  - Fragment assembly from Rosetta/I-TASSER protein structure prediction
+  - Protenix+TBM approach analysis (scores 0.409 on LB)
+  - DRfold2 RNA structure prediction
+- **Research**: [research/research_IT005_fragment_assembly.md](research/research_IT005_fragment_assembly.md)
+- **Plan**: [plans/plan_IT005_fragment_assembly.md](plans/plan_IT005_fragment_assembly.md)
+- **Checkpoints**: None (template-based, no model weights)
+- **Status**: RUNNING (pushed to Kaggle, awaiting results)
