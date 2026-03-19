@@ -1,0 +1,41 @@
+# Transformer training configuration for Stanford RNA 3D Folding 2
+# IT004: Pre-norm Transformer encoder with pair bias
+
+model_type: "transformer"
+
+# Transformer architecture
+num_tokens: 5
+d_model: 128
+nhead: 8
+num_layers: 6
+dim_feedforward: 512
+dropout: 0.1
+output_dim: 3
+max_len: 2048
+use_pair_bias: true
+
+# Training
+batch_size: 16
+learning_rate: 0.0003
+num_epochs: 100
+weight_decay: 0.0001
+gradient_clip: 1.0
+
+# Scheduler
+scheduler_factor: 0.5
+scheduler_patience: 5
+
+# Early stopping
+patience: 15
+
+# Loss
+loss: "rmsd"
+
+# Data
+data_dir: "data/raw"
+split_strategy: "kfold"
+n_splits: 5
+
+# Dummy data settings (for pipeline validation)
+num_dummy_samples: 50
+dummy_seq_len: 30
