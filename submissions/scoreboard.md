@@ -8,7 +8,8 @@ Master scoreboard for full-pipeline performance tracking.
 |--------------|-------------|-------------------|------------------|------------------|-------------|----------|-----------|-----------|------|--------|-------|
 | SUB001 | IT002 | IT002 (C1' fix) | SUB001 (inline) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Training loss=inf (normalization bug), not submitted to competition |
 | SUB002 | IT002 | IT002 (C1' fix) | SUB002 (fixed) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Loss ~7.5e33, internet blocking submission |
-| SUB003 | IT002 | IT002 (C1' fix) | SUB003 (no-internet) | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Zero-init head, tanh output, Huber loss, pre-built DB dataset |
+| SUB003 | IT002 | IT002 (C1' fix) | SUB003 (no-internet) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Template DB empty (0 chains), competition data not found, no predictions |
+| SUB004 | IT004 | IT004 (train template) | N/A | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Train-data templates, chain-aware, structural constraints |
 
 ## Status Definitions
 
