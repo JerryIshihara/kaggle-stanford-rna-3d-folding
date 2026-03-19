@@ -1,7 +1,7 @@
 {
   "id": "jerryishihara/stanford-rna-3d-template-refinement",
-  "title": "Stanford RNA 3D - Template + Neural Refinement v2",
-  "code_file": "submission_SUB002.ipynb",
+  "title": "Stanford RNA 3D - Multi-Model Ensemble v3",
+  "code_file": "submission_SUB003.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": "true",
