@@ -75,6 +75,27 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | Stanford RNA Folding 2 Template Approach (haradibots) | https://www.kaggle.com/code/haradibots/stanford-rna-folding-2-template-based-approach | IT004 | Another template-based approach from competition |
 | Protenix+TBM (llkh0a) | https://www.kaggle.com/code/llkh0a/stanford-rna-3d-folding-part-2-protenix-tbm | IT004 | Advanced approach combining Protenix with TBM, TM-score ~0.4+ |
 
+## IT005 — Multi-Template Diversity Research
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| RNA-align TM-score tool | https://zhanggroup.org/RNA-align/ | IT005 | TM-score computation for RNA structures, standard metric |
+| Template-based RNA prediction (bioRxiv) | https://www.biorxiv.org/content/10.64898/2025.12.30.696949v1 | IT005 | Shows template-based methods winning code competitions, multi-template averaging |
+| DRfold2 repository | https://github.com/leeyang/drfold2 | IT005 | Ab initio RNA structure prediction, ~0.24 LB, could achieve 0.40 |
+| RibonanzaNet2 model | https://www.kaggle.com/models/shujun717/ribonanzanet2 | IT005 | Best public model score 0.40, PyTorch-based |
+| US-align structure alignment | https://www.biorxiv.org/content/10.1101/2022.04.18.488565.full | IT005 | Universal structure alignment for proteins, RNA, DNA using TM-score |
+
+## Leaderboard Snapshot (March 19, 2026) [IT005]
+
+| Rank | Team | Score (TM-score) | Notes |
+|------|------|----------|-------|
+| 1 | best_template_oracle | 0.554 | Template-based oracle |
+| 2 | AyPy | 0.499 | Up from 0.492 |
+| 3 | Brad Shervheim and Jack Cole | 0.485 | Up from 0.483 |
+| 4 | Claude Code and me | 0.462 | New entry |
+| 5 | Marcin Wojciechowski | 0.461 | Stable |
+| Our | jerryishihara | 0.211 | First submission (SUB004) |
+
 ## IT004 — Key Debugging Insights
 
 | Finding | Source | Impact |
