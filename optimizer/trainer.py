@@ -123,7 +123,12 @@ class Trainer:
                 "model_kwargs": {
                     k: v
                     for k, v in self.config.items()
-                    if k in ("num_tokens", "embed_dim", "hidden_dim", "num_layers", "dropout", "output_dim")
+                    if k in (
+                        "num_tokens", "embed_dim", "hidden_dim", "num_layers", "dropout",
+                        "output_dim", "kernel_size", "max_len",
+                        "k_neighbors",
+                        "d_model", "nhead", "dim_feedforward", "use_pair_bias",
+                    )
                 },
             },
             path,
