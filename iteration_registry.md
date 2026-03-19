@@ -72,3 +72,34 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Report**: [reports/report_IT002.md](reports/report_IT002.md)
 - **Checkpoints**: None yet (template database pending download)
 - **Status**: PROMOTED
+
+---
+
+### IT004 — Train-Data Template-Based Prediction
+
+- **Iteration ID**: IT004
+- **Title**: Template-based prediction using competition training data
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB004.ipynb`
+  - `submissions/submission_SUB004.md`
+  - `analysis/SUB003_postmortem.md`
+- **Functions / Features**:
+  - Train-data template library (2671+ sequences with C1' coordinates)
+  - K-mer prefilter (5-mers, 2-bit encoded, Jaccard similarity)
+  - Needleman-Wunsch alignment with banded mode for long sequences
+  - Coordinate transfer with gap interpolation
+  - Chain-aware prediction via stoichiometry parsing
+  - RNA structural constraints (C1' bond distance, steric repulsion, smoothing)
+  - Diversity transforms (hinge rotation, chain jitter, smooth wiggle)
+  - Diagnostic file listing for data access debugging
+- **Description**: Complete rewrite of submission approach. Uses competition's own training data as template library instead of broken external PDB database. No neural refinement, no internet, no external datasets.
+- **Motivation**: SUB001-SUB003 all failed. SUB003 had empty template DB (0 chains) and couldn't find competition data files. Public notebooks demonstrate TM-score 0.1-0.4 with pure template matching from train data.
+- **Sources**:
+  - Public notebook: kami1976/stanford-template-based-rna-3d-folding-part-2
+  - Public notebook: llkh0a/stanford-rna-3d-folding-part-2-protenix-tbm
+- **Research**: [research/research_IT004_train_template.md](research/research_IT004_train_template.md)
+- **Plan**: [plans/plan_IT004_train_template.md](plans/plan_IT004_train_template.md)
+- **Report**: Pending (awaiting Kaggle execution results)
+- **Checkpoints**: None (template-only approach, no model weights)
+- **Status**: IN PROGRESS

@@ -66,3 +66,21 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | `kaggle kernels push` != competition submit | SUB001 post-mortem | Code competitions require notebook submission through UI, not just kernel push. |
 | Template search is the bottleneck | SUB001 log analysis | 58 min for 28 targets because template search runs 5x per target. Cache it. |
 | val_labels has 126 columns (not 18) | SUB001 log analysis | Richer training signal than expected. Worth investigating extra columns. |
+
+## IT004 — Train-Data Template Research
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| Template-Based RNA 3D Folding (kami1976) | https://www.kaggle.com/code/kami1976/stanford-template-based-rna-3d-folding-part-2 | IT004 | Full template approach: train data as templates, BioPython aligner, chain-aware constraints, diversity transforms. Clean single-file implementation. |
+| Stanford RNA Folding 2 Template Approach (haradibots) | https://www.kaggle.com/code/haradibots/stanford-rna-folding-2-template-based-approach | IT004 | Another template-based approach from competition |
+| Protenix+TBM (llkh0a) | https://www.kaggle.com/code/llkh0a/stanford-rna-3d-folding-part-2-protenix-tbm | IT004 | Advanced approach combining Protenix with TBM, TM-score ~0.4+ |
+
+## IT004 — Key Debugging Insights
+
+| Finding | Source | Impact |
+|---------|--------|--------|
+| Template DB dataset had JSON files but no template_index.pkl | SUB003 log analysis | PDBRNADatabase loaded 0 chains. Fix: rebuild index from JSONs. |
+| Competition train data has 5716 seqs with ground-truth 3D coords | Competition data analysis | Far better template source than external PDB (1081 chains). Always use train data. |
+| train_labels has only structure 1 (x_1, y_1, z_1) | Data format analysis | val_labels has 40 structures, sample_submission needs 5 structures. |
+| Test sequences: 28 targets, lengths 19-4640 | Data format analysis | Most targets are short (mean 349), one long target (4640 nt). |
+| Competition data IS available at /kaggle/input/stanford-rna-3d-folding-2/ | Public notebook analysis | Path is correct; SUB003 failure was likely a dataset versioning/mount issue. |
