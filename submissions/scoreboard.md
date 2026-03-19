@@ -10,7 +10,7 @@ Master scoreboard for full-pipeline performance tracking.
 | SUB002 | IT002 | IT002 (C1' fix) | SUB002 (fixed) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Loss ~7.5e33, internet blocking submission |
 | SUB003 | IT002 | IT002 (C1' fix) | SUB003 (no-internet) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Template DB empty (0 chains), competition data not found, no predictions |
 | SUB004 | IT004 | IT004 (train template) | N/A | N/A | N/A | N/A | 0.211 | Pending | - | BEST_CURRENT | Train-data templates, chain-aware, structural constraints |
-| SUB005 | IT005 | IT005 (multi-template) | N/A | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Multi-template diversity, Kabsch blend, helical gaps, TM-score validation |
+| SUB005 | IT005 | IT005 (multi-template) | N/A | IT005 (TM-score) | N/A | Val: 0.113 mean | Pending (manual submit needed) | Pending | - | SUBMITTED | Multi-template diversity, Kabsch blend, helical gaps; Val: 0.58 best, 0.11 mean |
 
 ## Status Definitions
 

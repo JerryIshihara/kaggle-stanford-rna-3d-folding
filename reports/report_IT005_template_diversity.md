@@ -34,7 +34,10 @@
 ## Metrics
 - SUB004 baseline: 0.211 TM-score (public LB)
 - SUB005 expected: 0.28-0.35 TM-score
-- Actual: Pending (kernel running)
+- SUB005 validation: Mean 0.113, Median 0.062, Best 0.582 (9IWF), 2/20 targets > 0.3
+- SUB005 runtime: 828s for 28 test targets + 128s for 20 validation targets
+- Templates used: 5716 (up from 2671 due to relaxed sentinel filtering)
+- Public LB: Pending manual submission via Kaggle UI
 
 ## Comparison vs Previous
 | Aspect | SUB004 | SUB005 |
@@ -48,10 +51,29 @@
 | Validation | None | TM-score on val set |
 | Search scope | 200/20 | 300/30 |
 
+## Validation Analysis
+- 2 targets achieved excellent TM-scores: 9IWF (0.582), 9E9Q (0.504)
+- 18 other targets scored < 0.20, most below 0.10
+- This bimodal distribution suggests: when a good template exists, our method works well;
+  but most targets lack a structurally similar template in the training data
+- The relaxed sentinel filtering increased templates from 2671 to 5716, including many
+  with partial NaN coordinates — these may introduce noise
+
+## Key Observations
+- More templates doesn't help if they're not structurally similar to the test targets
+- The temporal cutoff means test structures are newer than training data
+- Random template selection for slots 2-5 may not add meaningful diversity
+  if top templates are all poor matches
+
 ## Outcome Classification
-**NEEDS_FOLLOWUP** — Kernel running, awaiting LB score.
+**NEEDS_FOLLOWUP** — Kernel completed, awaiting LB score (manual submission required).
 
 ## Decision and Follow-up
-- If score improves significantly (>0.25): PROMOTE and iterate further
-- If score similar or worse: investigate validation TM-scores for debugging
-- Next potential improvements: DRfold2 integration, fragment assembly, better template selection with structural features
+- Manual LB submission needed via Kaggle UI
+- If LB score improves: PROMOTE
+- Key bottleneck: template coverage, not template diversity
+- Next priorities:
+  1. Filter templates more strictly (require >80% valid coordinates)
+  2. Consider DRfold2 or RibonanzaNet2 model integration for better ab initio prediction
+  3. Fragment assembly for partial template coverage
+  4. Secondary structure-guided template selection
