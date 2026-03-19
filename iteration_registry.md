@@ -98,5 +98,6 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Research**: [research/research_IT003_sentinel_fix.md](research/research_IT003_sentinel_fix.md)
 - **Plan**: [plans/plan_IT003_sentinel_fix.md](plans/plan_IT003_sentinel_fix.md)
 - **Report**: [reports/report_IT003_sentinel_fix.md](reports/report_IT003_sentinel_fix.md)
-- **Checkpoints**: Pending Kaggle kernel run
-- **Status**: NEEDS_FOLLOWUP
+- **Checkpoints**: N/A (model trained within Kaggle kernel)
+- **Kaggle Results**: Loss 63.4 → 40.6 over 40 epochs; refinement usable; 37,322 sentinel residues filtered
+- **Status**: PROMOTED

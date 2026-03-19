@@ -48,13 +48,45 @@ Fix sentinel value handling in training data and establish working competition s
 
 ### Local Test Results
 
-| Metric | SUB002 (before fix) | IT003 (after fix) |
+| Metric | SUB002 (before fix) | IT003 local (after fix) |
 |--------|--------------------|--------------------|
 | Training loss epoch 1 | ~2.2 × 10^34 | ~23.8 |
 | Training loss epoch 5 | ~1.8 × 10^34 | ~22.6 |
 | Loss finite? | No (falls back) | Yes |
-| Refinement model usable | False | True (expected) |
+| Refinement model usable | False | True |
 | Sentinel residues filtered | 0 | 21,224 |
+
+### Kaggle Kernel Results (SUB003)
+
+| Metric | Value |
+|--------|-------|
+| Device | NVIDIA T4 GPU (cuda) |
+| Template DB | 3,721 chains from 2,000 PDB entries |
+| Training samples | 28 |
+| Sentinel residues filtered | 37,322 |
+| **Training loss epoch 1** | **63.37** |
+| **Training loss epoch 40** | **41.94** |
+| **Best training loss** | **40.57** |
+| **Refinement model usable** | **True** |
+| Submission rows | 9,762 |
+| NaN values | 0 |
+| Total runtime | ~40 minutes |
+
+### Training Convergence (Kaggle Run)
+
+```
+Epoch   1/40  loss=63.37  best=63.37
+Epoch   5/40  loss=60.05  best=59.44
+Epoch  10/40  loss=52.18  best=52.18
+Epoch  15/40  loss=49.53  best=48.41
+Epoch  20/40  loss=46.61  best=44.46
+Epoch  25/40  loss=43.57  best=42.69
+Epoch  30/40  loss=41.26  best=41.26
+Epoch  35/40  loss=42.02  best=40.67
+Epoch  40/40  loss=41.94  best=40.57
+```
+
+Loss decreased steadily from 63.4 to 40.6 over 40 epochs — the model actually converged.
 
 ### Validation Data Analysis
 
@@ -69,25 +101,25 @@ Fix sentinel value handling in training data and establish working competition s
 
 | Aspect | SUB001 | SUB002 | SUB003 |
 |--------|--------|--------|--------|
-| Training loss | inf | ~10^34 | ~23 (expected) |
+| Training loss | inf | ~10^34 | **40.57** |
 | Normalization | None | Centroid + scale | Centroid + scale |
 | Norm layer | BatchNorm | InstanceNorm | InstanceNorm |
-| Sentinel handling | None | None | Filtered + masked |
-| Refinement usable | No | No | Yes (expected) |
-| Competition submission | None | None | Pending |
+| Sentinel handling | None | None | **Filtered + masked** |
+| Refinement usable | No | No | **Yes** |
+| Competition submission | None | None | Notebook pushed; needs UI submission |
 
 ## Outcome Classification
-**NEEDS_FOLLOWUP** — Local tests confirm the fix resolves the loss explosion. Kaggle kernel has been pushed and is running. Competition submission pending kernel completion.
+**PROMOTED** — The sentinel fix completely resolves the training loss explosion. The refinement model converges on Kaggle with loss decreasing from 63.4 to 40.6. The notebook is ready for competition submission through the Kaggle UI.
 
 ## Decision and Follow-up
 
 ### Immediate
-1. Monitor Kaggle kernel execution for successful completion
-2. Submit output to competition once kernel finishes
-3. Record first competition score
+1. **Submit notebook to competition through Kaggle UI** — the notebook (`stanford-rna-3d-template-refinement`) has completed successfully and needs to be submitted via the competition's submission interface
+2. Record first competition score
 
 ### Future Iterations
-1. **IT004**: Explore using all 40 validation structures for data augmentation
+1. **IT004**: Explore using all 40 validation structures for data augmentation (currently only struct 1 has >30% coverage)
 2. **IT005**: Investigate MSA features for template-free predictions
-3. **IT006**: Evaluate whether refinement improves over pure template baseline
-4. Consider uploading template DB as a Kaggle dataset to speed up future kernel runs
+3. **IT006**: Evaluate whether refinement actually improves TM-score over pure template baseline
+4. Consider uploading template DB as a Kaggle dataset to speed up future kernel runs (~14 min saved)
+5. Lower the validation mask threshold or implement Kabsch alignment between predicted and ground truth before computing loss

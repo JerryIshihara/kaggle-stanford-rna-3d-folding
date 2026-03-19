@@ -10,7 +10,7 @@ Store evaluation results after implementation. Every iteration must produce a re
 |------|-------------|---------|---------|
 | [report_IT001.md](report_IT001.md) | IT001 | PROMOTED | Pipeline bootstrap completed successfully |
 | [report_IT002.md](report_IT002.md) | IT002 | PROMOTED | Template-based pipeline implemented, core logic verified |
-| [report_IT003_sentinel_fix.md](report_IT003_sentinel_fix.md) | IT003 | NEEDS_FOLLOWUP | Sentinel fix resolves loss explosion; Kaggle run pending |
+| [report_IT003_sentinel_fix.md](report_IT003_sentinel_fix.md) | IT003 | PROMOTED | Sentinel fix resolves loss explosion; Kaggle kernel converged (loss 40.6) |
 
 ## Filename Convention
 
