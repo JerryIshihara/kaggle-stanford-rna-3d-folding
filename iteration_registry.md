@@ -100,6 +100,37 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
   - Public notebook: llkh0a/stanford-rna-3d-folding-part-2-protenix-tbm
 - **Research**: [research/research_IT004_train_template.md](research/research_IT004_train_template.md)
 - **Plan**: [plans/plan_IT004_train_template.md](plans/plan_IT004_train_template.md)
-- **Report**: Pending (awaiting Kaggle execution results)
+- **Report**: [reports/report_IT004_train_template.md](reports/report_IT004_train_template.md)
 - **Checkpoints**: None (template-only approach, no model weights)
+- **Status**: PROMOTED (LB Score: 0.211)
+
+---
+
+### IT005 — Multi-Template Diverse Prediction
+
+- **Iteration ID**: IT005
+- **Title**: Multi-template diversity with Kabsch blend and local TM-score validation
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB005.ipynb`
+  - `submissions/submission_SUB005.md`
+  - `analysis/SUB004_postmortem.md`
+- **Functions / Features**:
+  - Multi-template prediction: 5 different templates for 5 prediction slots
+  - Kabsch superposition for template blending (weighted average of top-3)
+  - RNA-aware NW alignment (transition/transversion penalties)
+  - Relaxed length filter (±50% from ±30%)
+  - Helical gap interpolation (RNA A-form geometry)
+  - Local TM-score validation on validation set
+  - Expanded search (PREFILTER_TOP=300, ALIGN_TOP=30)
+- **Description**: Major improvement to template utilization. Instead of using 1 template + 4 random perturbations, uses 5 different templates for true structural diversity. Adds Kabsch-based template blending and local validation.
+- **Motivation**: SUB004 achieved 0.211 but top oracle is 0.554. Analysis shows template selection diversity is the primary bottleneck. Best-of-5 metric means maximizing diversity across predictions is critical.
+- **Sources**:
+  - SUB004 post-mortem analysis
+  - Zhang lab RNA-align TM-score: https://zhanggroup.org/RNA-align/
+  - Template-based RNA prediction: https://www.biorxiv.org/content/10.64898/2025.12.30.696949v1
+- **Research**: [research/research_IT005_template_diversity.md](research/research_IT005_template_diversity.md)
+- **Plan**: [plans/plan_IT005_template_diversity.md](plans/plan_IT005_template_diversity.md)
+- **Report**: Pending (kernel running on Kaggle)
+- **Checkpoints**: None (template-only approach)
 - **Status**: IN PROGRESS
