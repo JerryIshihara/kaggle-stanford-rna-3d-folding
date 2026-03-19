@@ -54,19 +54,21 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
   - `scripts/download_pdb_rna.py`
   - `scripts/build_template_db.py`
 - **Functions / Features**:
-  - `PDBRNADatabase` (download, build, search, align templates)
-  - `RNAStructureAligner` (TM-score, structural alignment, sequence identity)
-  - `TemplateModel` (predict, ensemble_predict)
-  - `TemplateEnsemble` (weighted_average, consensus_structure)
-  - Enhanced `RNADataLoader` with template functionality
-- **Description**: Analyze competition leaderboard, identify template-based approach as current best performer, implement complete template prediction pipeline.
-- **Motivation**: Leverage proven approach (template-based) for quick score improvement with 7 days remaining until deadline.
+  - `PDBRNADatabase` (search_rna_entries, download_entry, build_database, search_templates)
+  - `needleman_wunsch`, `sequence_identity`, `_kmer_set` (alignment utilities)
+  - `TemplateModel` (predict, predict_batch, _weighted_ensemble)
+  - `TemplateEnsemble` (predict — multi-model confidence-weighted ensemble)
+  - `transfer_coordinates` (alignment-based coordinate transfer with gap interpolation)
+  - `generate_helix_coords` (A-form RNA helix fallback)
+  - `kabsch_rmsd` (optimal superposition via Kabsch algorithm)
+- **Description**: Implemented complete template-based prediction pipeline: RCSB PDB API search, PDB text parsing for RNA chains, Needleman-Wunsch alignment, coordinate transfer with interpolation, identity-weighted ensemble, and geometric helix fallback.
+- **Motivation**: Leverage proven template-based approach (competition leader "best_template_oracle" at 0.554 RMSD) for quick score improvement.
 - **Sources**:
   - Competition leaderboard analysis (March 18, 2026)
-  - Top team: "best_template_oracle" (0.554 RMSD)
-  - Recent RNA structure prediction literature (2024-2026)
+  - RCSB PDB REST API: https://search.rcsb.org
+  - RNA structure prediction literature (2024-2026)
 - **Research**: [research/research_IT002.md](research/research_IT002.md)
 - **Plan**: [plans/plan_IT002.md](plans/plan_IT002.md)
-- **Report**: [reports/report_IT002.md](reports/report_IT002.md) *(pending)*
-- **Checkpoints**: Template database, trained alignment models
-- **Status**: IN PROGRESS
+- **Report**: [reports/report_IT002.md](reports/report_IT002.md)
+- **Checkpoints**: None yet (template database pending download)
+- **Status**: PROMOTED

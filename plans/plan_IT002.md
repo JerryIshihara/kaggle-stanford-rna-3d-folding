@@ -113,15 +113,21 @@ If template approach fails:
 
 ## Dependencies
 
-### External Tools:
-- **BioPython**: PDB parsing and sequence handling
-- **MMseqs2** (optional): Fast sequence searching
-- **ViennaRNA**: Secondary structure comparison
+### Available Libraries (confirmed on this machine):
+- **numpy** (2.4.3), **pandas** (3.0.1), **requests**, **tqdm**, **yaml**
+- **NOT available**: torch, biopython, scikit-learn — install if needed or avoid
+
+### Practical Approach (augmented):
+- Use **RCSB PDB REST API** (`requests`) for searching and downloading RNA structures — no biopython needed
+- Use **PDB text format parsing** with numpy for coordinate extraction
+- Implement **Needleman-Wunsch** sequence alignment in pure numpy — no MMseqs2 dependency
+- Use **JSON/pickle** for local template database cache
+- **Fallback**: geometric helix model for sequences with no template hits
 
 ### Data Requirements:
-- **PDB RNA structures**: ~5,000 structures expected
-- **Disk space**: ~10-20GB for full database
-- **Memory**: Sufficient for search index
+- **PDB RNA structures**: Fetched via RCSB REST API, stored locally as JSON
+- **Disk space**: ~500MB for processed template database (coordinates + sequences)
+- **Memory**: Template index fits in RAM (~5K structures)
 
 ## Risk Assessment
 

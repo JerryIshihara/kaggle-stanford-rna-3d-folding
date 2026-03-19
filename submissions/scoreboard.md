@@ -6,7 +6,7 @@ Master scoreboard for full-pipeline performance tracking.
 
 | Submission ID | Data Version | Inferencer Version | Optimizer Version | Validator Version | Checkpoints | Local CV | Public LB | Private LB | Rank | Status | Notes |
 |--------------|-------------|-------------------|------------------|------------------|-------------|----------|-----------|-----------|------|--------|-------|
-| *(none yet)* | | | | | | | | | | | |
+| SUB001 | IT002 | IT002 (C1' fix) | SUB001 (inline) | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Template + 1D ResNet refinement, 5 diverse predictions |
 
 ## Status Definitions
 
