@@ -13,6 +13,7 @@ Master scoreboard for full-pipeline performance tracking.
 | SUB005 | IT005 | IT005 (multi-template) | N/A | IT005 (TM-score) | N/A | Val: 0.113 mean | Pending (manual submit needed) | Pending | - | SUBMITTED | Multi-template diversity, Kabsch blend, helical gaps; Val: 0.58 best, 0.11 mean |
 | SUB006 | IT005 | IT005 (fragment assembly) | N/A | IT005 (TM-score) | N/A | Val: 0.179 mean | Pending | Pending | - | SUBMITTED | Fragment assembly, per-chain prediction, 6/28 > 0.3 TM |
 | SUB007 | IT006 | IT006 (SS refinement) | N/A | IT005 (TM-score) | N/A | Pending | Pending | Pending | - | SUBMITTED | Expanded templates (~5700), Nussinov SS constraints, SS de novo fallback |
+| SUB008 | IT006 | IT007 (dist geometry + SA) | N/A | IT005 (TM-score) | N/A | Pending | Pending | Pending | - | SUBMITTED | Distance geometry de novo, SA refinement, max-dispersion diversity |
 
 ## Status Definitions
 
