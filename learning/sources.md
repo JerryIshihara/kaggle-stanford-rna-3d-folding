@@ -56,3 +56,13 @@ All URLs, papers, notebooks, and references encountered across iterations. Tagge
 | 5 | d4t4 | 0.460 | Strong contender |
 
 Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.554. Tight competition.
+
+## Internal Debugging Insights [SUB001 -> SUB002]
+
+| Finding | Source | Impact |
+|---------|--------|--------|
+| BatchNorm1d fails with batch_size=1 | SUB001 post-mortem | Training loss = inf, model never learns. Use InstanceNorm1d instead. |
+| Raw PDB coordinates overflow Conv1d | SUB001 post-mortem | Coordinates (-100..100) * random weights -> overflow. Always normalize. |
+| `kaggle kernels push` != competition submit | SUB001 post-mortem | Code competitions require notebook submission through UI, not just kernel push. |
+| Template search is the bottleneck | SUB001 log analysis | 58 min for 28 targets because template search runs 5x per target. Cache it. |
+| val_labels has 126 columns (not 18) | SUB001 log analysis | Richer training signal than expected. Worth investigating extra columns. |
