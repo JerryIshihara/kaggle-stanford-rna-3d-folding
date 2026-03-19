@@ -6,7 +6,8 @@ Master scoreboard for full-pipeline performance tracking.
 
 | Submission ID | Data Version | Inferencer Version | Optimizer Version | Validator Version | Checkpoints | Local CV | Public LB | Private LB | Rank | Status | Notes |
 |--------------|-------------|-------------------|------------------|------------------|-------------|----------|-----------|-----------|------|--------|-------|
-| SUB001 | IT002 | IT002 (C1' fix) | SUB001 (inline) | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Template + 1D ResNet refinement, 5 diverse predictions |
+| SUB001 | IT002 | IT002 (C1' fix) | SUB001 (inline) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Training loss=inf (normalization bug), not submitted to competition |
+| SUB002 | IT002 | IT002 (C1' fix) | SUB002 (fixed) | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Fixed: InstanceNorm, coord normalization, cached inference |
 
 ## Status Definitions
 
