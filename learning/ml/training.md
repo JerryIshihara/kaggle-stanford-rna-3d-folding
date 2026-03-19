@@ -49,6 +49,15 @@
 - **GroupNorm**: Another batch-size-independent alternative. Groups channels and normalizes within each group. Good middle ground between Instance and Layer normalization.
 - **Source**: SUB001 post-mortem; loss was inf for all 25 epochs due to BatchNorm1d with B=1 combined with unnormalized coordinates.
 
+## Sentinel Values in Competition Data [IT003]
+
+- **Critical pitfall**: Kaggle `validation_labels.csv` uses `-1e18` as a sentinel for missing/invalid coordinates. This value is **not NaN** — it is a finite float that passes `np.isnan()` and `np.isfinite()` checks.
+- **Impact**: 947/9762 residues in structure 1 have sentinels (9.7%). 12 of 28 targets are affected. Target `9J09` has 46.7% sentinel in structure 1.
+- **Consequence**: Sentinel values survive normalization as enormous numbers (~-1e16 after centroid/scale), producing MSE loss ~10^32 per affected residue.
+- **Fix**: Filter residues where any coordinate component < -1e15. This threshold is conservative (real coordinates range ±360 Å max).
+- **Per-residue masking**: Create binary mask of valid residues. Compute loss only on masked positions: `loss = (sq_err * mask).sum() / (mask.sum() * 3)`. This prevents both sentinel contamination and zero-padded positions from affecting gradients.
+- **Source**: IT003 analysis of SUB002 v2 Kaggle kernel log showing loss ~10^34.
+
 ## Cross-Validation [IT001]
 
 - **Simple K-Fold**: Random splits. Fast but may have leakage if sequences are homologous.

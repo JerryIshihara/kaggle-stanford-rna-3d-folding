@@ -11,6 +11,7 @@ Track research and idea generation for each iteration. Every iteration must prod
 | [research_IT001.md](research_IT001.md) | IT001 | All | Competition analysis, approach survey, pipeline bootstrap |
 | [research_IT002.md](research_IT002.md) | IT002 | All | Competition landscape analysis, state-of-the-art approaches |
 | [research_IT003.md](research_IT003.md) | IT003 | data_processor, inferencer | Feature engineering — MSA, secondary structure, BPPM, RNA-FM, co-evolution, positional encoding |
+| [research_IT003_sentinel_fix.md](research_IT003_sentinel_fix.md) | IT003 | submissions, optimizer | Sentinel value bug analysis, training loss explosion root cause |
 
 ## Filename Convention
 

@@ -66,3 +66,6 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | `kaggle kernels push` != competition submit | SUB001 post-mortem | Code competitions require notebook submission through UI, not just kernel push. |
 | Template search is the bottleneck | SUB001 log analysis | 58 min for 28 targets because template search runs 5x per target. Cache it. |
 | val_labels has 126 columns (not 18) | SUB001 log analysis | Richer training signal than expected. Worth investigating extra columns. |
+| Sentinel values (-1e18) in val_labels are NOT NaN | IT003 data analysis | 9.7% of structure 1 residues have sentinel; causes loss ~1e34. Must filter with threshold < -1e15. |
+| val_labels has 40 structures, not 5 | IT003 data analysis | Columns x_1..x_40, y_1..y_40, z_1..z_40 plus chain, copy, Usage. Only struct 1 has >50% coverage. |
+| Kaggle data paths vary between kernel versions | IT003 v3 kernel analysis | Competition data may mount at `/kaggle/input/stanford-rna-3d-folding-2` or `/kaggle/input/competitions/stanford-rna-3d-folding-2`. Always try multiple paths. |
