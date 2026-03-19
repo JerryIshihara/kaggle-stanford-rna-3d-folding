@@ -18,6 +18,8 @@ submissions/submission_<SUBMISSION_ID>.py    (optional)
 submissions/submission_<SUBMISSION_ID>.md
 ```
 
+Always append new rows to the **end** of the table above to minimize merge conflicts.
+
 ## Links
 
 - [Scoreboard](scoreboard.md)

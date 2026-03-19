@@ -13,5 +13,11 @@ Store implementation plans before coding. Every iteration must produce a plan ar
 ## Filename Convention
 
 ```
-plans/plan_<ITERATION_ID>.md
+plans/plan_<ITERATION_ID>_<topic_slug>.md
 ```
+
+- `<topic_slug>`: short lowercase underscore-separated descriptor (2–4 words, `[a-z0-9_]` only).
+- The topic slug prevents merge conflicts when parallel agents create plan files simultaneously.
+- Example: `plans/plan_IT003_template_pipeline.md`
+
+> Legacy files (IT001, IT002) omit the topic slug and keep their original names.

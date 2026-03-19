@@ -9,9 +9,17 @@ Track research and idea generation for each iteration. Every iteration must prod
 | File | Iteration ID | Target Module(s) | Idea Summary |
 |------|-------------|-------------------|-------------|
 | [research_IT001.md](research_IT001.md) | IT001 | All | Competition analysis, approach survey, pipeline bootstrap |
+| [research_IT002.md](research_IT002.md) | IT002 | All | Competition landscape analysis, state-of-the-art approaches |
+| [research_IT003.md](research_IT003.md) | IT003 | data_processor, inferencer | Feature engineering — MSA, secondary structure, BPPM, RNA-FM, co-evolution, positional encoding |
 
 ## Filename Convention
 
 ```
-research/research_<ITERATION_ID>.md
+research/research_<ITERATION_ID>_<topic_slug>.md
 ```
+
+- `<topic_slug>`: short lowercase underscore-separated descriptor (2–4 words, `[a-z0-9_]` only).
+- The topic slug prevents merge conflicts when parallel agents create research files simultaneously.
+- Example: `research/research_IT003_template_pipeline.md`
+
+> Legacy files (IT001, IT002) omit the topic slug and keep their original names.
