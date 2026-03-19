@@ -24,29 +24,13 @@ At the beginning of every session:
 - IT001, IT002, IT003, ...
 - Always zero-pad to three digits.
 
-## Topic Slug Format
-
-Every iteration artifact (research, plan, report) MUST include a **topic slug** in its filename.
-
-- A topic slug is a short, lowercase, underscore-separated descriptor of the iteration focus.
-- 2–4 words maximum. Use only `[a-z0-9_]`.
-- Examples: `template_pipeline`, `msa_features`, `gnn_baseline`, `loss_tuning`, `ensemble_v2`.
-- The slug makes each file globally unique, preventing merge conflicts when multiple agents work on different iterations in parallel.
-
-Full filename format: `<artifact>_<ID>_<topic_slug>.md`
-
-Examples:
-- `research/research_IT003_template_pipeline.md`
-- `plans/plan_IT003_template_pipeline.md`
-- `reports/report_IT003_template_pipeline.md`
-
 ## 6-Phase Iteration Cycle
 
 Every iteration MUST follow these phases in order. No implementation before Phase 1 and 2 are complete.
 
 ### Phase 1 — Research
 
-Create `research/research_<ID>_<topic_slug>.md` containing:
+Create `research/research_<ID>.md` containing:
 - Iteration ID
 - Title
 - Target module(s)
@@ -69,7 +53,7 @@ Research sources to check:
 
 ### Phase 2 — Plan
 
-Create `plans/plan_<ID>_<topic_slug>.md` containing:
+Create `plans/plan_<ID>.md` containing:
 - Iteration ID
 - Title
 - Target module(s)
@@ -100,7 +84,7 @@ Run the pipeline and evaluate:
 
 ### Phase 5 — Document
 
-Create `reports/report_<ID>_<topic_slug>.md` containing:
+Create `reports/report_<ID>.md` containing:
 - Iteration ID, title, target module(s)
 - Files changed, functions/features changed
 - Experiment setup, validation setting
@@ -116,6 +100,7 @@ Then update ALL of the following:
 - `reports/README.md` — add report file entry
 - `checkpoints/README.md` — if checkpoints were saved
 - Root `README.md` — update best score if improved
+- `learning/` — sync domain knowledge (see Learning Knowledge Base section below)
 
 ### Phase 6 — Submission Assembly (when applicable)
 
@@ -183,42 +168,70 @@ an iteration ID and report.
 
 ## File Naming Conventions
 
-| Artifact | Pattern | Example |
-|----------|---------|---------|
-| Research | `research/research_<ID>_<topic_slug>.md` | `research/research_IT003_template_pipeline.md` |
-| Plan | `plans/plan_<ID>_<topic_slug>.md` | `plans/plan_IT003_template_pipeline.md` |
-| Report | `reports/report_<ID>_<topic_slug>.md` | `reports/report_IT003_template_pipeline.md` |
-| Module code | `<module>/<descriptive_name>_<ID>.py` | `data_processor/features_IT003.py` |
-| Checkpoint | `checkpoints/<ID>_<description>.pt` | `checkpoints/IT003_best_fold0.pt` |
-| Submission notebook | `submissions/submission_<SUB_ID>.ipynb` | `submissions/submission_SUB001.ipynb` |
-| Submission script | `submissions/submission_<SUB_ID>.py` | `submissions/submission_SUB001.py` |
-| Submission docs | `submissions/submission_<SUB_ID>.md` | `submissions/submission_SUB001.md` |
+| Artifact | Pattern |
+|----------|---------|
+| Research | `research/research_<ID>.md` |
+| Plan | `plans/plan_<ID>.md` |
+| Report | `reports/report_<ID>.md` |
+| Module code | `<module>/<descriptive_name>_<ID>.py` |
+| Checkpoint | `checkpoints/<ID>_<description>.pt` |
+| Submission notebook | `submissions/submission_<SUB_ID>.ipynb` |
+| Submission script | `submissions/submission_<SUB_ID>.py` |
+| Submission docs | `submissions/submission_<SUB_ID>.md` |
 
-> **Legacy files**: Iterations IT001 and IT002 used the old `<artifact>_<ID>.md` pattern
-> without a topic slug. These files keep their original names; do not rename them.
+## Learning Knowledge Base
 
-## Parallel Agent Editing
+Every iteration MUST sync domain knowledge to `learning/`. This is a persistent,
+accumulating knowledge base that grows with each iteration. It ensures that insights,
+algorithms, biology concepts, and references are never lost between sessions.
 
-Multiple agents may work on different iterations concurrently. To avoid merge conflicts:
+### Folder Structure
 
-1. **Use the topic slug** in every artifact filename. Two agents on different tasks will
-   produce non-overlapping filenames even if they accidentally pick the same iteration ID.
-2. **Claim your iteration ID early**: Add an `IN PROGRESS` stub entry to
-   `iteration_registry.md` and push it before starting substantial work. If the push
-   fails due to a conflict on that ID, increment and retry.
-3. **Append-only shared files**: When updating `iteration_registry.md`, module READMEs,
-   `research/README.md`, `plans/README.md`, and `reports/README.md`, always **append**
-   new entries at the end so that git can auto-merge parallel additions.
-4. **Never rewrite shared files**: Do not reformat, re-sort, or reflow existing content
-   in shared files during an iteration — this maximizes merge compatibility.
+```
+learning/
+├── README.md           # Index and overview
+├── cs/                 # Computer science: algorithms, data structures, complexity
+│   └── *.md            # One file per topic cluster
+├── ml/                 # Machine learning: architectures, losses, training, evaluation
+│   └── *.md            # One file per topic cluster
+├── bio/                # Biology & bioinformatics: RNA, proteins, PDB, structural biology
+│   └── *.md            # One file per topic cluster
+└── sources.md          # Master bibliography — every URL, paper, notebook referenced
+```
+
+### What to Sync
+
+After each iteration, extract and append any NEW domain knowledge to the appropriate file:
+
+| Category | Examples |
+|----------|----------|
+| `cs/` | Sequence alignment algorithms, dynamic programming, graph algorithms, k-mer indexing, SVD/eigenvalue decomposition, coordinate geometry |
+| `ml/` | Model architectures (CNN, RNN, Transformer, GNN), loss functions, optimizers, schedulers, regularization, ensembling, MC-dropout, TM-score vs RMSD |
+| `bio/` | RNA structure (primary/secondary/tertiary), A-form helix geometry, nucleotide chemistry, PDB format, C1'/C3'/P atoms, backbone torsion angles, base pairing, MSA, co-evolution |
+| `sources.md` | Every paper, URL, Kaggle notebook, GitHub repo, or blog post encountered — with title, URL, date accessed, relevance note, and the iteration ID that introduced it |
+
+### Rules
+
+1. **Append, never overwrite.** Add new knowledge; do not remove or rewrite existing entries.
+2. **Tag with iteration ID.** Every new entry must note which iteration produced it (e.g. `[IT002]`).
+3. **Include source.** Every factual claim must have a source URL or citation.
+4. **Keep it concise.** Bullet points and short paragraphs, not essays.
+5. **Cross-link.** Reference related entries in other learning files when relevant.
+
+### Sync Checklist (add to Phase 5)
+
+- [ ] Any new algorithm or CS concept? → `learning/cs/`
+- [ ] Any new ML technique, architecture, or training insight? → `learning/ml/`
+- [ ] Any new biology or bioinformatics concept? → `learning/bio/`
+- [ ] Any new source URL or publication? → `learning/sources.md`
 
 ## Validity Rules
 
 No implementation is valid unless:
-- It has an iteration ID and topic slug
-- It has a research artifact (`research/research_<ID>_<topic_slug>.md`)
-- It has a plan artifact (`plans/plan_<ID>_<topic_slug>.md`)
-- It has a report artifact (`reports/report_<ID>_<topic_slug>.md`)
+- It has an iteration ID
+- It has a research artifact
+- It has a plan artifact
+- It has a report artifact
 - It is linked from the relevant module README
 - It is linked from `iteration_registry.md`
 

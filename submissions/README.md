@@ -8,7 +8,7 @@ Store Kaggle-submit-ready aggregated notebooks/scripts combining selected versio
 
 | Submission ID | Title | Data Version | Inferencer Version | Optimizer Version | Validator Version | Notebook | Markdown | Score |
 |--------------|-------|-------------|-------------------|------------------|------------------|----------|----------|-------|
-| *(none yet)* | | | | | | | | |
+| SUB001 | Template + Neural Refinement | IT002 | IT002 (C1' fix) | SUB001 (inline) | N/A | [notebook](submission_SUB001.ipynb) | [metadata](submission_SUB001.md) | Pending |
 
 ## Filename Convention
 

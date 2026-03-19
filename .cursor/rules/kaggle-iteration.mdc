@@ -10,6 +10,7 @@ globs:
   - "plans/**"
   - "reports/**"
   - "submissions/**"
+  - "learning/**"
   - "iteration_registry.md"
   - "scripts/run_pipeline.py"
 alwaysApply: false
@@ -133,6 +134,7 @@ Then update ALL of the following:
 - `reports/README.md` — add report file entry
 - `checkpoints/README.md` — if checkpoints were saved
 - Root `README.md` — update best score if improved
+- `learning/` — sync domain knowledge (see Learning Knowledge Base section below)
 
 ### Phase 6 — Submission Assembly (when applicable)
 
@@ -228,6 +230,52 @@ Multiple agents may work on different iterations concurrently. To avoid merge co
    new entries at the end so that git can auto-merge parallel additions.
 4. **Never rewrite shared files**: Do not reformat, re-sort, or reflow existing content
    in shared files during an iteration — this maximizes merge compatibility.
+
+## Learning Knowledge Base
+
+Every iteration MUST sync domain knowledge to `learning/`. This is a persistent,
+accumulating knowledge base that grows with each iteration. It ensures that insights,
+algorithms, biology concepts, and references are never lost between sessions.
+
+### Folder Structure
+
+```
+learning/
+├── README.md           # Index and overview
+├── cs/                 # Computer science: algorithms, data structures, complexity
+│   └── *.md            # One file per topic cluster
+├── ml/                 # Machine learning: architectures, losses, training, evaluation
+│   └── *.md            # One file per topic cluster
+├── bio/                # Biology & bioinformatics: RNA, proteins, PDB, structural biology
+│   └── *.md            # One file per topic cluster
+└── sources.md          # Master bibliography — every URL, paper, notebook referenced
+```
+
+### What to Sync
+
+After each iteration, extract and append any NEW domain knowledge to the appropriate file:
+
+| Category | Examples |
+|----------|----------|
+| `cs/` | Sequence alignment algorithms, dynamic programming, graph algorithms, k-mer indexing, SVD/eigenvalue decomposition, coordinate geometry |
+| `ml/` | Model architectures (CNN, RNN, Transformer, GNN), loss functions, optimizers, schedulers, regularization, ensembling, MC-dropout, TM-score vs RMSD |
+| `bio/` | RNA structure (primary/secondary/tertiary), A-form helix geometry, nucleotide chemistry, PDB format, C1'/C3'/P atoms, backbone torsion angles, base pairing, MSA, co-evolution |
+| `sources.md` | Every paper, URL, Kaggle notebook, GitHub repo, or blog post encountered — with title, URL, date accessed, relevance note, and the iteration ID that introduced it |
+
+### Rules
+
+1. **Append, never overwrite.** Add new knowledge; do not remove or rewrite existing entries.
+2. **Tag with iteration ID.** Every new entry must note which iteration produced it (e.g. `[IT002]`).
+3. **Include source.** Every factual claim must have a source URL or citation.
+4. **Keep it concise.** Bullet points and short paragraphs, not essays.
+5. **Cross-link.** Reference related entries in other learning files when relevant.
+
+### Sync Checklist (add to Phase 5)
+
+- [ ] Any new algorithm or CS concept? → `learning/cs/`
+- [ ] Any new ML technique, architecture, or training insight? → `learning/ml/`
+- [ ] Any new biology or bioinformatics concept? → `learning/bio/`
+- [ ] Any new source URL or publication? → `learning/sources.md`
 
 ## Validity Rules
 
