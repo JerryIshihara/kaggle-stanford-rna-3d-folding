@@ -8,7 +8,7 @@ Master scoreboard for full-pipeline performance tracking.
 |--------------|-------------|-------------------|------------------|------------------|-------------|----------|-----------|-----------|------|--------|-------|
 | SUB001 | IT002 | IT002 (C1' fix) | SUB001 (inline) | N/A | N/A | N/A | N/A | N/A | - | FAILED | Training loss=inf (normalization bug), not submitted to competition |
 | SUB002 | IT002 | IT002 (C1' fix) | SUB002 (fixed) | N/A | N/A | N/A | 0.211 | Pending | - | SUBMITTED | Fixed: InstanceNorm, coord normalization, cached inference |
-| SUB003 | IT002 | IT004 (ResNet + Transformer) | SUB003 (inline) | N/A | N/A | N/A | Pending | Pending | - | SUBMITTED | Multi-model ensemble: expanded templates, ResNet + Transformer refinement |
+| SUB003 | IT002 | IT004 (ResNet + Transformer) | SUB003 (inline) | N/A | N/A | N/A | 0.246 | Pending | - | SUBMITTED | Multi-model ensemble: expanded templates, ResNet + Transformer refinement |
 | SUB004 | IT002 | IT004 + SUB004 (length-aware) | SUB004 (TM-aware) | SUB004 (TM-score) | N/A | N/A | Pending | Pending | - | SUBMITTED | Length-aware ensemble, TM-aware loss, iterative refinement, SS-guided fallback |
 
 ## Status Definitions
