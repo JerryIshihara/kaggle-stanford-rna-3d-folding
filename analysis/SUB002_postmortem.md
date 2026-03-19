@@ -43,6 +43,12 @@ if not np.any(np.isnan(vals)):  # sentinel passes this check!
 
 The `-1e18` value is not NaN, so it passes the NaN check. After centroid subtraction (centroid ≈ ~100) and scale division (scale ≈ ~50), the normalized sentinel becomes `(-1e18 - 100) / 50 ≈ -2e16`. The MSE loss on this single residue is `(pred - (-2e16))^2 ≈ 4e32`, which dominates the entire batch.
 
+### Additional Contributing Factors
+
+The model's randomly initialized head produces large deltas. After 6 residual blocks with ReLU activations and residual connections, activations can grow unboundedly. The `scale` floor in `normalize_coords` was set to `1e-8`, which for short sequences with near-zero variance means enormous normalized values.
+
+The competition also requires `enable_internet: false` for code submission. SUB002 had `enable_internet: true` because `build_database()` downloads from RCSB at runtime. Even if the model worked perfectly, we couldn't submit.
+
 ### V2 Training Log
 
 ```
@@ -71,11 +77,21 @@ The v3 kernel (`stanford-rna-3d-template-neural-refinement-v3`) failed completel
 - Tried to load template DB from `/kaggle/input/rna-pdb-template-db` (non-existent dataset)
 - Result: 0 templates, 0 test sequences, 0 predictions, empty submission
 
-## Fix (IT003 / SUB003)
+## Fixes Applied in SUB003
 
-1. **Sentinel filter**: Skip residues where any coord < -1e15
-2. **Per-residue mask**: Binary mask in loss computation
-3. **Robust path detection**: Try multiple Kaggle mount points
-4. **Reduced LR**: 1e-4 (from 3e-4), increased epochs: 40 (from 25)
+| Issue | Fix |
+|-------|-----|
+| Sentinel values (-1e18) treated as valid | Filter residues where any coord < -1e15 |
+| No masking for missing ground truth | Per-residue binary mask in loss computation |
+| Random head init -> huge deltas | Zero-initialize head weights (initial delta = 0) |
+| Unbounded delta output | `tanh(raw) * delta_scale` constrains output to [-2, 2] in normalized space |
+| MSE sensitive to outliers | Huber loss (`SmoothL1Loss`) for robustness |
+| Scale floor too small | `scale = max(np.std(centered), 1.0)` instead of `+ 1e-8` |
+| Internet dependency | Pre-built template DB uploaded as Kaggle dataset |
+| ReLU accumulation in residuals | GELU activation + Kaiming initialization |
+| 6 residual blocks (too deep) | Reduced to 4 blocks |
+| Learning rate 3e-4 too high | Reduced to 1e-4 |
+| Wrong competition data path | Robust path detection trying multiple mount points |
+| `kaggle kernels push` ≠ competition submit | Document proper submission process |
 
 Local test confirms: loss drops from ~10^34 to ~23 (normalized MSE), and decreases over epochs.

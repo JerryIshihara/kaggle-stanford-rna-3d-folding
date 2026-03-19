@@ -12,6 +12,12 @@
 | Loss on invalid residues | No masking for missing ground truth | Per-residue binary mask in loss computation |
 | V3 kernel no data found | Wrong competition data path | Robust path detection trying multiple mount points |
 | Never submitted | `kaggle kernels push` ≠ competition submission | Document proper submission process |
+| Random head init -> huge deltas | Randomly initialized head weights | Zero-initialize head weights (initial delta = 0) |
+| Unbounded delta output | No output constraint | `tanh(raw) * delta_scale` constrains output to [-2, 2] in normalized space |
+| MSE sensitive to outliers | MSE loss | Huber loss (`SmoothL1Loss`) for robustness |
+| Scale floor too small | `scale + 1e-8` | `scale = max(np.std(centered), 1.0)` |
+| Internet dependency | Downloads from RCSB at runtime | Pre-built template DB uploaded as Kaggle dataset |
+| ReLU accumulation in residuals | ReLU activation | GELU activation + Kaiming initialization |
 
 ## Method
 

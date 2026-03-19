@@ -69,3 +69,42 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | Sentinel values (-1e18) in val_labels are NOT NaN | IT003 data analysis | 9.7% of structure 1 residues have sentinel; causes loss ~1e34. Must filter with threshold < -1e15. |
 | val_labels has 40 structures, not 5 | IT003 data analysis | Columns x_1..x_40, y_1..y_40, z_1..z_40 plus chain, copy, Usage. Only struct 1 has >50% coverage. |
 | Kaggle data paths vary between kernel versions | IT003 v3 kernel analysis | Competition data may mount at `/kaggle/input/stanford-rna-3d-folding-2` or `/kaggle/input/competitions/stanford-rna-3d-folding-2`. Always try multiple paths. |
+
+## IT004 — Train-Data Template Research
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| Template-Based RNA 3D Folding (kami1976) | https://www.kaggle.com/code/kami1976/stanford-template-based-rna-3d-folding-part-2 | IT004 | Full template approach: train data as templates, BioPython aligner, chain-aware constraints, diversity transforms. Clean single-file implementation. |
+| Stanford RNA Folding 2 Template Approach (haradibots) | https://www.kaggle.com/code/haradibots/stanford-rna-folding-2-template-based-approach | IT004 | Another template-based approach from competition |
+| Protenix+TBM (llkh0a) | https://www.kaggle.com/code/llkh0a/stanford-rna-3d-folding-part-2-protenix-tbm | IT004 | Advanced approach combining Protenix with TBM, TM-score ~0.4+ |
+
+## IT005 — Multi-Template Diversity Research
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| RNA-align TM-score tool | https://zhanggroup.org/RNA-align/ | IT005 | TM-score computation for RNA structures, standard metric |
+| Template-based RNA prediction (bioRxiv) | https://www.biorxiv.org/content/10.64898/2025.12.30.696949v1 | IT005 | Shows template-based methods winning code competitions, multi-template averaging |
+| DRfold2 repository | https://github.com/leeyang/drfold2 | IT005 | Ab initio RNA structure prediction, ~0.24 LB, could achieve 0.40 |
+| RibonanzaNet2 model | https://www.kaggle.com/models/shujun717/ribonanzanet2 | IT005 | Best public model score 0.40, PyTorch-based |
+| US-align structure alignment | https://www.biorxiv.org/content/10.1101/2022.04.18.488565.full | IT005 | Universal structure alignment for proteins, RNA, DNA using TM-score |
+
+## Leaderboard Snapshot (March 19, 2026) [IT005]
+
+| Rank | Team | Score (TM-score) | Notes |
+|------|------|----------|-------|
+| 1 | best_template_oracle | 0.554 | Template-based oracle |
+| 2 | AyPy | 0.499 | Up from 0.492 |
+| 3 | Brad Shervheim and Jack Cole | 0.485 | Up from 0.483 |
+| 4 | Claude Code and me | 0.462 | New entry |
+| 5 | Marcin Wojciechowski | 0.461 | Stable |
+| Our | jerryishihara | 0.211 | First submission (SUB004) |
+
+## IT004 — Key Debugging Insights
+
+| Finding | Source | Impact |
+|---------|--------|--------|
+| Template DB dataset had JSON files but no template_index.pkl | SUB003 log analysis | PDBRNADatabase loaded 0 chains. Fix: rebuild index from JSONs. |
+| Competition train data has 5716 seqs with ground-truth 3D coords | Competition data analysis | Far better template source than external PDB (1081 chains). Always use train data. |
+| train_labels has only structure 1 (x_1, y_1, z_1) | Data format analysis | val_labels has 40 structures, sample_submission needs 5 structures. |
+| Test sequences: 28 targets, lengths 19-4640 | Data format analysis | Most targets are short (mean 349), one long target (4640 nt). |
+| Competition data IS available at /kaggle/input/stanford-rna-3d-folding-2/ | Public notebook analysis | Path is correct; SUB003 failure was likely a dataset versioning/mount issue. |
