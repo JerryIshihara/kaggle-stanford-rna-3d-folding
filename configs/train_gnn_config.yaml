@@ -1,0 +1,40 @@
+# GNN training configuration for Stanford RNA 3D Folding 2
+# IT004: E(n)-equivariant graph neural network
+
+model_type: "gnn"
+
+# GNN architecture
+num_tokens: 5
+embed_dim: 64
+hidden_dim: 128
+num_layers: 6
+dropout: 0.1
+output_dim: 3
+k_neighbors: 10
+max_len: 2048
+
+# Training
+batch_size: 16
+learning_rate: 0.0005
+num_epochs: 100
+weight_decay: 0.0001
+gradient_clip: 1.0
+
+# Scheduler
+scheduler_factor: 0.5
+scheduler_patience: 5
+
+# Early stopping
+patience: 15
+
+# Loss
+loss: "rmsd"
+
+# Data
+data_dir: "data/raw"
+split_strategy: "kfold"
+n_splits: 5
+
+# Dummy data settings (for pipeline validation)
+num_dummy_samples: 50
+dummy_seq_len: 30

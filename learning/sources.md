@@ -57,6 +57,25 @@ All URLs, papers, notebooks, and references encountered across iterations. Tagge
 
 Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.554. Tight competition.
 
+## GNN and Transformer References [IT004]
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| EGNN: E(n) Equivariant Graph Neural Networks (Satorras et al.) | https://github.com/vgsatorras/egnn | IT004 | Foundation for RNAGraphModel — equivariant message passing with coordinate updates |
+| EGNN PyTorch (lucidrains) | https://github.com/lucidrains/egnn-pytorch | IT004 | Clean PyTorch implementation of EGNN |
+| SE3-Transformer PyTorch (lucidrains) | https://github.com/lucidrains/se3-transformer-pytorch | IT004 | SE(3)-equivariant self-attention, AlphaFold2 integration |
+| RhoFold+ (Chen et al.) | https://www.nature.com/articles/s41592-024-02487-0 | IT004 | RNA language model + IPA module, state-of-the-art RNA structure prediction |
+| trRosettaRNA (Yang Lab) | https://www.nature.com/articles/s41467-023-42528-4 | IT004 | Transformer for RNA distance/geometry prediction + Rosetta energy minimization |
+| EquiRNA (ICLR 2025) | https://proceedings.iclr.cc/paper_files/paper/2025/file/691fe5a436d53e23c08fbbb2da529617-Paper-Conference.pdf | IT004 | E(3)-equivariant GeoGNN with size-insensitive K-NN for RNA |
+| DeepFoldRNA | https://system.wisacad-pub.com/index.php/bc/article/view/36 | IT004 | GNN for RNA 3D structure, 28% RMSD improvement, TM-score 0.82 |
+| GraphFold3D (Stanford CS224W) | https://medium.com/stanford-cs224w/graphfold3d-predicting-rna-tertiary-structure-from-secondary-structure-using-graph-neural-networks-2f6282909303 | IT004 | GNN predicting tertiary from secondary structure |
+| GVP (Jing et al., ICLR 2021) | https://github.com/drorlab/gvp-pytorch | IT004 | Geometric Vector Perceptron for equivariant message passing |
+| RNA 3D Structure-Function Benchmark | https://arxiv.org/html/2503.21681v1 | IT004 | Comprehensive benchmark with GNN baselines using rnaglib |
+| Graphein RNA Tutorial | https://graphein.ai/notebooks/rna_graph_tutorial.html | IT004 | RNA graph construction library (node/edge types) |
+| DTU Kaggle RNA Solution | https://www.kaggle.com/code/olaflundstrom/stanford-rna-3d-folding-kaggle-competition-dtu | IT004 | Competition solution notebook |
+| RibonanzaNet2 on Kaggle Models | https://www.kaggle.com/competitions/stanford-rna-3d-folding/models | IT004 | Top-scoring model (0.632), Transformer+CNN architecture |
+| Transformers in RNA Structure Prediction (Review) | https://www.sciencedirect.com/science/article/pii/S200103702500090X | IT004 | Comprehensive review of Transformer approaches for RNA |
+
 ## Internal Debugging Insights [SUB001 -> SUB002]
 
 | Finding | Source | Impact |

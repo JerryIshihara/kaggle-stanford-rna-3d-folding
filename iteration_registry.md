@@ -75,9 +75,9 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 
 ---
 
-### IT004 — Train-Data Template-Based Prediction
+### IT004a — Train-Data Template-Based Prediction
 
-- **Iteration ID**: IT004
+- **Iteration ID**: IT004a
 - **Title**: Template-based prediction using competition training data
 - **Module**: submissions/
 - **Files**:
@@ -103,6 +103,45 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Report**: [reports/report_IT004_train_template.md](reports/report_IT004_train_template.md)
 - **Checkpoints**: None (template-only approach, no model weights)
 - **Status**: PROMOTED (LB Score: 0.211)
+
+---
+
+### IT004b — GNN and Transformer Models
+
+- **Iteration ID**: IT004b
+- **Title**: GNN and Transformer architectures for RNA 3D structure prediction
+- **Module**: inferencer (primary), data_processor, scripts, configs
+- **Files**:
+  - `inferencer/gnn_model.py` (new)
+  - `inferencer/transformer_model.py` (new)
+  - `configs/train_gnn_config.yaml` (new)
+  - `configs/train_transformer_config.yaml` (new)
+  - `inferencer/baseline_model.py` (modified)
+  - `optimizer/trainer.py` (modified)
+  - `scripts/run_pipeline.py` (modified)
+- **Functions / Features**:
+  - `build_rna_graph` (RNA graph construction with backbone, skip, k-NN edges)
+  - `EGNNLayer` (E(n)-equivariant message-passing layer with coordinate updates)
+  - `RNAGraphModel` (full GNN model: embedding → graph → EGNN → coords)
+  - `SinusoidalPositionalEncoding` (fixed sin/cos PE for length generalization)
+  - `PreNormTransformerLayer` (pre-LN attention + FFN with optional pair bias)
+  - `PairRepresentation` (AlphaFold-style outer product + relative PE)
+  - `StructureModule` (MLP coordinate head)
+  - `RNATransformerModel` (full Transformer: embedding → encoder → structure module)
+  - `_get_full_registry()` (lazy-import model registry expansion)
+  - `_model_kwargs()` (config → model constructor kwargs extraction)
+- **Description**: Implemented two new deep learning architectures for RNA 3D structure prediction — an E(n)-equivariant Graph Neural Network (EGNN-style) and a pre-norm Transformer encoder with AlphaFold-style pair bias. Both integrated into the pipeline with full training support, config files, and backward-compatible model registry.
+- **Motivation**: GNNs capture non-local base-pairing interactions through graph message passing; Transformers learn global pairwise relationships through self-attention. Both architectures are proven in state-of-the-art RNA structure prediction (EquiRNA, RhoFold+, trRosettaRNA).
+- **Sources**:
+  - Satorras et al., "E(n) Equivariant Graph Neural Networks", ICML 2021
+  - RhoFold+, Nature Methods 2024
+  - trRosettaRNA, Nature Communications 2023
+  - EquiRNA, ICLR 2025
+- **Research**: [research/research_IT004_gnn_transformer.md](research/research_IT004_gnn_transformer.md)
+- **Plan**: [plans/plan_IT004_gnn_transformer.md](plans/plan_IT004_gnn_transformer.md)
+- **Report**: [reports/report_IT004_gnn_transformer.md](reports/report_IT004_gnn_transformer.md)
+- **Checkpoints**: `IT004_gnn_best.pt`, `IT004_transformer_best.pt` (dummy data validation)
+- **Status**: PROMOTED
 
 ---
 
@@ -133,4 +172,4 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Plan**: [plans/plan_IT005_template_diversity.md](plans/plan_IT005_template_diversity.md)
 - **Report**: Pending (kernel running on Kaggle)
 - **Checkpoints**: None (template-only approach)
-- **Status**: IN PROGRESS
+- **Status**: COMPLETE
