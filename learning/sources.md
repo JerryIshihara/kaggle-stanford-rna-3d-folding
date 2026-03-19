@@ -124,3 +124,14 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | train_labels has only structure 1 (x_1, y_1, z_1) | Data format analysis | val_labels has 40 structures, sample_submission needs 5 structures. |
 | Test sequences: 28 targets, lengths 19-4640 | Data format analysis | Most targets are short (mean 349), one long target (4640 nt). |
 | Competition data IS available at /kaggle/input/stanford-rna-3d-folding-2/ | Public notebook analysis | Path is correct; SUB003 failure was likely a dataset versioning/mount issue. |
+
+### Sources Added in IT006
+
+| Source | Type | Relevance |
+|---|---|---|
+| RNABaselineModel (Kaggle model by Andrometocs) | Kaggle model | Template + rules baseline, score 0.364 TM. Uses BioPython pairwise2, base-pair attraction for low-confidence, de novo fold. [IT006] |
+| Nussinov et al. (1978) - RNA folding algorithm | Algorithm | Secondary structure prediction via DP. Used for base-pair distance constraints in IT006. |
+| GARN3 (bioRxiv 2025.07.05.663322) | Paper | Coarse-grained helix-centered RNA 3D prediction with ML scoring. [IT006] |
+| TiRNA (PMC12802904) | Paper | Coarse-grained method with temperature/ion effects for RNA folding. [IT006] |
+| NuFold (Nature 2025, s41467-025-56261-7) | Paper | End-to-end RNA tertiary structure with flexible nucleobase representation. [IT006] |
+| Template-based RNA prediction (bioRxiv 2025.12.30.696949) | Paper | Winning approach from RNA 3D Folding Part 1: template discovery without DL outperformed pure DL. [IT006] |
