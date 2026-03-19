@@ -1,14 +1,16 @@
 {
   "id": "jerryishihara/stanford-rna-3d-template-refinement",
-  "title": "Stanford RNA 3D - Template + Neural Refinement v2",
-  "code_file": "submission_SUB002.ipynb",
+  "title": "Stanford RNA 3D - Template + Neural Refinement v3",
+  "code_file": "submission_SUB003.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": "true",
   "enable_gpu": "true",
   "enable_tpu": "false",
-  "enable_internet": "true",
-  "dataset_sources": [],
+  "enable_internet": "false",
+  "dataset_sources": [
+    "jerryishihara/rna-pdb-template-db"
+  ],
   "competition_sources": [
     "stanford-rna-3d-folding-2"
   ],
