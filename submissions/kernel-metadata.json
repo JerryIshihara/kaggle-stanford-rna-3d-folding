@@ -1,7 +1,7 @@
 {
   "id": "jerryishihara/stanford-rna-3d-template-refinement",
-  "title": "Stanford RNA 3D - Train Template Prediction v4",
-  "code_file": "submission_SUB004.ipynb",
+  "title": "Stanford RNA 3D - Multi-Template Diverse Prediction v5",
+  "code_file": "submission_SUB005.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": "true",
