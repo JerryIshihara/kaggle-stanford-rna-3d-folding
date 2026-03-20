@@ -75,6 +75,35 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 
 ---
 
+### IT003 — Sentinel Value Fix and Submission Pipeline
+
+- **Iteration ID**: IT003
+- **Title**: Fix sentinel value handling in training data and establish working competition submission pipeline
+- **Module**: submissions, optimizer
+- **Files**:
+  - `submissions/submission_SUB003.ipynb`
+  - `submissions/submission_SUB003.md`
+  - `submissions/kernel-metadata.json`
+- **Functions / Features**:
+  - `build_training_data()` — sentinel filter (< -1e15), per-residue valid_mask
+  - `train_refinement()` — masked loss computation, loss clamping
+  - Robust Kaggle path detection (multiple mount points)
+- **Description**: Fixed critical bug where validation_labels.csv sentinel values (-1e18) were treated as valid coordinates, causing training loss ~10^34. Added per-residue masking so only residues with valid ground truth contribute to loss. Added robust data path detection for Kaggle.
+- **Motivation**: SUB002 refinement model never converged due to sentinel contamination. V3 kernel failed due to wrong data path. No submission was ever made to the competition.
+- **Sources**:
+  - SUB001 post-mortem: `analysis/SUB001_postmortem.md`
+  - V2 kernel log analysis
+  - V3 kernel log analysis
+  - Competition data format inspection
+- **Research**: [research/research_IT003_sentinel_fix.md](research/research_IT003_sentinel_fix.md)
+- **Plan**: [plans/plan_IT003_sentinel_fix.md](plans/plan_IT003_sentinel_fix.md)
+- **Report**: [reports/report_IT003_sentinel_fix.md](reports/report_IT003_sentinel_fix.md)
+- **Checkpoints**: N/A (model trained within Kaggle kernel)
+- **Kaggle Results**: Loss 63.4 → 40.6 over 40 epochs; refinement usable; 37,322 sentinel residues filtered
+- **Status**: PROMOTED
+
+---
+
 ### IT004 — GNN and Transformer Models
 
 - **Iteration ID**: IT004
