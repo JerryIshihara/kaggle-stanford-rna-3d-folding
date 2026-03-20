@@ -43,10 +43,45 @@
 - **Weaknesses**: Cannot handle novel folds with no structural homologs in PDB.
 - **Status**: Core of IT002 and SUB001 pipeline.
 
-## Approaches Considered but Not Yet Implemented [IT002]
+## E(n)-Equivariant Graph Neural Network (RNAGraphModel) [IT004]
 
-- **Transformer encoder**: Self-attention over sequence positions. Could capture long-range dependencies better than GRU/CNN. Needs more data.
-- **Graph Neural Networks (SE(3)-equivariant)**: Operate on 3D coordinate graphs. Handle rotation/translation invariance natively. Tools: e3nn, EGNN.
+- **What**: EGNN-style message-passing GNN that updates both node features and 3D coordinates while maintaining E(n)-equivariance (rotation, translation, reflection invariance).
+- **Graph construction**: Three edge types per RNA:
+  - Backbone edges: (i, i+1) bidirectional
+  - Skip-connection edges: (i, i+k) for k ∈ {2, 4, 8, 16}
+  - K-nearest-neighbor edges: based on sequence distance heuristic (k=10 default)
+- **Node features**: Token embedding + sinusoidal positional encoding → MLP projection (64→128 dim).
+- **Coordinate initialization**: Learned MLP from node features → initial (x, y, z).
+- **EGNN layers**: 6 layers, each performing:
+  1. Message: concat(h_src, h_dst, edge_attr, dist²) → MLP → message vector
+  2. Coordinate update: Δx = rel_pos × coord_MLP(message), averaged over neighbors (equivariant)
+  3. Node update: concat(h, aggregated_messages) → MLP → h_new + residual, LayerNorm
+- **Output**: EGNN coordinates + learned correction head.
+- **Parameters**: ~870K with default settings.
+- **Key insight**: Coordinate updates use relative positions multiplied by learned scalars — this is the mechanism that ensures E(n)-equivariance without expensive spherical harmonics.
+- **Source**: Satorras et al., ICML 2021; implemented in `inferencer/gnn_model.py`.
+- **Status**: Implemented in IT004, validated on dummy data.
+
+## Pre-Norm Transformer with Pair Bias (RNATransformerModel) [IT004]
+
+- **What**: Transformer encoder for sequence-to-coordinate prediction with AlphaFold-inspired pair bias in attention.
+- **Architecture**:
+  - Token embedding (5 tokens, d_model=128) + sinusoidal positional encoding (fixed, not learned)
+  - 6 PreNormTransformerLayers with 8 attention heads, FFN dim 512
+  - Optional pair representation: outer product of single representations + relative positional embedding → bias term in attention logits
+  - Structure module: LayerNorm → MLP (128→128→3) for coordinate output
+- **Pre-norm design**: LayerNorm applied before attention and FFN (not after), enabling more stable gradient flow in deeper models.
+- **Pair bias mechanism**: Pair representation is (B, L, L, D) computed as left_proj(x)ᵢ + right_proj(x)ⱼ + rel_pos_embed(i-j), projected to nhead bias values added to attention logits. Inspired by AlphaFold2's Evoformer pair representation.
+- **Sinusoidal PE**: Not learned — enables generalization to sequence lengths not seen during training.
+- **Parameters**: ~1.5M with default settings.
+- **Source**: Inspired by RhoFold+ (Nature Methods 2024), trRosettaRNA (Nature Communications 2023). Implemented in `inferencer/transformer_model.py`.
+- **Status**: Implemented in IT004, validated on dummy data.
+
+## Approaches Considered but Not Yet Implemented [IT002, IT004]
+
 - **Diffusion models**: Generate structures via iterative denoising. State-of-the-art for protein structure generation (RFdiffusion).
 - **RoseTTAFold2 for RNA**: Adaptation of the protein structure prediction system. Uses MSA + templates + pair representations.
 - **RNA-FM / ESMFold for RNA**: Foundation models pre-trained on large RNA sequence databases.
+- **SE(3)-Transformer**: Combines self-attention with SE(3)-equivariant fiber features (Fuchs et al., NeurIPS 2020). More expressive than EGNN but more expensive.
+- **Invariant Point Attention (IPA)**: AlphaFold2's structure module. Attends over 3D points in local frames. Could replace the structure module in our Transformer. [IT004]
+- **GNN + Transformer hybrid**: Use GNN for local structure refinement and Transformer for global context. Potential architecture for IT005+. [IT004]

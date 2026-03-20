@@ -75,3 +75,37 @@
 - **What**: Fraction of aligned positions where both sequences have the same nucleotide.
 - **Formula**: identity = matches / aligned_length (excludes pure-gap columns).
 - **Use in pipeline**: Ranks template hits; higher identity templates are weighted more heavily in the ensemble. Minimum threshold of 0.2 filters out poor matches.
+
+## Distance Geometry / Multidimensional Scaling (MDS) [IT007]
+
+- **What**: Method to embed objects in Euclidean space from pairwise distance information.
+- **Classical MDS algorithm**:
+  1. Construct squared distance matrix D² from pairwise distances
+  2. Double-center: B = -0.5 * H * D² * H where H = I - (1/n)*11'
+  3. Eigendecompose B = V * Λ * V'
+  4. Take top 3 eigenvectors/eigenvalues → coordinates X = V_3 * sqrt(Λ_3)
+- **For RNA**: Build distance matrix from backbone (5.95 Å), base-pair (10.5 Å), and stacking (3.4 Å) constraints
+- **Complexity**: O(n³) for eigendecomposition, O(n²) for subsampled MDS with interpolation
+- **Use in pipeline**: De novo 3D coordinate generation for targets without good templates.
+- **Source**: Crippen & Havel (1988), Distance Geometry and Molecular Conformation
+
+## Simulated Annealing (SA) Refinement [IT007]
+
+- **What**: Optimization that allows uphill moves with decreasing probability over time.
+- **Temperature schedule**: T(t) = T_init * (T_final/T_init)^(t/t_max), exponential cooling
+- **For RNA refinement**: Energy = E_bond + E_pair + E_stack + E_clash + E_smooth
+  - E_bond: backbone distance deviation from 5.95 Å
+  - E_pair: base-pair distance deviation from 10.5 Å  
+  - E_stack: stacking distance deviation from 3.4 Å
+  - E_clash: penalty for non-bonded distances < 3.2 Å
+  - E_smooth: Laplacian smoothing penalty
+- **Use in pipeline**: 25-30 iterations of coordinate refinement after template transfer or de novo generation.
+
+## Max-Dispersion Selection [IT007]
+
+- **What**: Greedy algorithm to select the k most diverse items from a set.
+- **Algorithm**:
+  1. Start with best item (highest quality/confidence)
+  2. Repeat k-1 times: select the item maximizing min RMSD to already-selected set
+- **Complexity**: O(n²k) where n is candidate pool, k is selection size
+- **Use in pipeline**: Generate 10 prediction candidates, select 5 most structurally diverse to optimize best-of-5 metric.

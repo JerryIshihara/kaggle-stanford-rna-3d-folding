@@ -75,9 +75,9 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 
 ---
 
-### IT004 — Train-Data Template-Based Prediction
+### IT004a — Train-Data Template-Based Prediction
 
-- **Iteration ID**: IT004
+- **Iteration ID**: IT004a
 - **Title**: Template-based prediction using competition training data
 - **Module**: submissions/
 - **Files**:
@@ -106,6 +106,45 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 
 ---
 
+### IT004b — GNN and Transformer Models
+
+- **Iteration ID**: IT004b
+- **Title**: GNN and Transformer architectures for RNA 3D structure prediction
+- **Module**: inferencer (primary), data_processor, scripts, configs
+- **Files**:
+  - `inferencer/gnn_model.py` (new)
+  - `inferencer/transformer_model.py` (new)
+  - `configs/train_gnn_config.yaml` (new)
+  - `configs/train_transformer_config.yaml` (new)
+  - `inferencer/baseline_model.py` (modified)
+  - `optimizer/trainer.py` (modified)
+  - `scripts/run_pipeline.py` (modified)
+- **Functions / Features**:
+  - `build_rna_graph` (RNA graph construction with backbone, skip, k-NN edges)
+  - `EGNNLayer` (E(n)-equivariant message-passing layer with coordinate updates)
+  - `RNAGraphModel` (full GNN model: embedding → graph → EGNN → coords)
+  - `SinusoidalPositionalEncoding` (fixed sin/cos PE for length generalization)
+  - `PreNormTransformerLayer` (pre-LN attention + FFN with optional pair bias)
+  - `PairRepresentation` (AlphaFold-style outer product + relative PE)
+  - `StructureModule` (MLP coordinate head)
+  - `RNATransformerModel` (full Transformer: embedding → encoder → structure module)
+  - `_get_full_registry()` (lazy-import model registry expansion)
+  - `_model_kwargs()` (config → model constructor kwargs extraction)
+- **Description**: Implemented two new deep learning architectures for RNA 3D structure prediction — an E(n)-equivariant Graph Neural Network (EGNN-style) and a pre-norm Transformer encoder with AlphaFold-style pair bias. Both integrated into the pipeline with full training support, config files, and backward-compatible model registry.
+- **Motivation**: GNNs capture non-local base-pairing interactions through graph message passing; Transformers learn global pairwise relationships through self-attention. Both architectures are proven in state-of-the-art RNA structure prediction (EquiRNA, RhoFold+, trRosettaRNA).
+- **Sources**:
+  - Satorras et al., "E(n) Equivariant Graph Neural Networks", ICML 2021
+  - RhoFold+, Nature Methods 2024
+  - trRosettaRNA, Nature Communications 2023
+  - EquiRNA, ICLR 2025
+- **Research**: [research/research_IT004_gnn_transformer.md](research/research_IT004_gnn_transformer.md)
+- **Plan**: [plans/plan_IT004_gnn_transformer.md](plans/plan_IT004_gnn_transformer.md)
+- **Report**: [reports/report_IT004_gnn_transformer.md](reports/report_IT004_gnn_transformer.md)
+- **Checkpoints**: `IT004_gnn_best.pt`, `IT004_transformer_best.pt` (dummy data validation)
+- **Status**: PROMOTED
+
+---
+
 ### IT005 — Multi-Template Diverse Prediction
 
 - **Iteration ID**: IT005
@@ -131,6 +170,68 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
   - Template-based RNA prediction: https://www.biorxiv.org/content/10.64898/2025.12.30.696949v1
 - **Research**: [research/research_IT005_template_diversity.md](research/research_IT005_template_diversity.md)
 - **Plan**: [plans/plan_IT005_template_diversity.md](plans/plan_IT005_template_diversity.md)
+- **Report**: Pending (kernel running on Kaggle)
+- **Checkpoints**: None (template-only approach)
+- **Status**: COMPLETE
+
+---
+
+### IT006 — Secondary Structure Refinement + Expanded Templates
+
+- **Iteration ID**: IT006
+- **Title**: SS-guided coordinate refinement and expanded template bank
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB007.ipynb` (new)
+  - `submissions/submission_SUB007.md` (new)
+- **Functions / Features**:
+  - Expanded template bank: train + validation labels (~5700 templates vs ~2671)
+  - Nussinov secondary structure prediction (base pair prediction)
+  - SS-guided iterative coordinate refinement (bond length + base-pair distance + clash + smoothing)
+  - SS-guided de novo fallback (for targets without good templates)
+  - Larger candidate pool (PREFILTER_TOP=400, ALIGN_TOP=60)
+  - 4-pass iterative constraint satisfaction with decay
+- **Description**: Major enhancement to template-based prediction. Doubles template library by adding validation data, adds RNA secondary structure prediction to constrain coordinates, and provides SS-guided de novo generation for low-template-coverage targets.
+- **Motivation**: SUB006 shows bimodal performance: 6/28 targets > 0.3 TM but 22/28 < 0.1. Expanding templates addresses coverage, SS constraints improve geometry for all targets.
+- **Sources**:
+  - RNABaselineModel (Kaggle model, 0.364 TM): base-pair constraint approach
+  - Nussinov algorithm for secondary structure prediction
+  - bioRxiv 2025: template-based RNA prediction winning approaches
+- **Research**: [research/research_IT006_ss_refinement.md](research/research_IT006_ss_refinement.md)
+- **Plan**: [plans/plan_IT006_ss_refinement.md](plans/plan_IT006_ss_refinement.md)
+- **Report**: Pending (kernel running on Kaggle)
+- **Checkpoints**: None (template-only approach)
+- **Status**: IN PROGRESS
+
+---
+
+### IT007 — Distance Geometry De Novo + SA Refinement + Diversity Selection
+
+- **Iteration ID**: IT007
+- **Title**: Distance geometry de novo folding, simulated annealing refinement, max-dispersion diversity
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB008.ipynb` (new)
+  - `submissions/submission_SUB008.md` (new)
+  - `scripts/build_sub008.py` (new) — notebook build script
+- **Functions / Features**:
+  - `distance_geometry_fold()` — MDS-based 3D coordinate embedding from predicted distance matrix
+  - `_mds_subsampled()` — Subsampled MDS for large structures (> 500 residues)
+  - `_enforce_backbone()` — Iterative backbone distance enforcement
+  - `sa_refine_coordinates()` — Simulated annealing with temperature schedule (25-30 iterations)
+  - `select_diverse_predictions()` — Greedy max-dispersion diversity selection (10 → 5)
+  - `compute_rmsd()` — RMSD computation for diversity matrix
+  - i,i+3 distance constraints (A-form helix 13.5 Å)
+  - Stacking distance constraints (~3.4 Å for consecutive paired bases)
+  - Generate 10 candidate predictions per target, select 5 most diverse
+- **Description**: Three-pronged improvement to address the bimodal performance distribution. (1) Replace simplistic sequential de novo folding with distance geometry (eigendecomposition of doubly-centered distance matrix); (2) Replace fixed 4-pass constraints with 25-iteration SA refinement with temperature schedule; (3) Optimize best-of-5 metric by generating 10 candidates and selecting the 5 most structurally diverse.
+- **Motivation**: 22/28 targets score < 0.1 due to poor de novo fallback. Current fixed 5-slot strategy doesn't optimize for diversity. SA refinement is more effective than fixed-strength passes.
+- **Sources**:
+  - Crippen & Havel (1988): Distance Geometry and Molecular Conformation
+  - SimRNA (Boniecki et al., 2016): Coarse-grained SA for RNA folding
+  - PMC 2025: Template-based RNA prediction competition analysis
+- **Research**: [research/research_IT007_distance_geometry.md](research/research_IT007_distance_geometry.md)
+- **Plan**: [plans/plan_IT007_distance_geometry.md](plans/plan_IT007_distance_geometry.md)
 - **Report**: Pending (kernel running on Kaggle)
 - **Checkpoints**: None (template-only approach)
 - **Status**: IN PROGRESS

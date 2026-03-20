@@ -28,7 +28,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from data_processor.loader import RNADataLoader, encode_sequence
 from data_processor.dataset import RNAStructureDataset, RNATestDataset, collate_rna
-from inferencer.baseline_model import create_model
+from inferencer.baseline_model import create_model, _get_full_registry
 from inferencer.predict import load_checkpoint, predict_sequences
 from optimizer.trainer import Trainer
 from optimizer.losses import get_loss_fn
@@ -39,6 +39,22 @@ from validator.splitter import get_splitter
 def load_config(path: str) -> dict:
     with open(path) as f:
         return yaml.safe_load(f) or {}
+
+
+# Keys that model constructors may accept (superset across all model types).
+_MODEL_KWARG_KEYS = frozenset({
+    "num_tokens", "embed_dim", "hidden_dim", "num_layers", "dropout", "output_dim",
+    "kernel_size", "max_len",
+    # GNN-specific
+    "k_neighbors",
+    # Transformer-specific
+    "d_model", "nhead", "dim_feedforward", "use_pair_bias",
+})
+
+
+def _model_kwargs(config: dict) -> dict:
+    """Extract model-constructor keyword arguments from a config dict."""
+    return {k: v for k, v in config.items() if k in _MODEL_KWARG_KEYS}
 
 
 # ---------------------------------------------------------------------------
@@ -119,7 +135,7 @@ def cmd_train(args):
         val_loader = DataLoader(val_ds, batch_size=config["batch_size"], shuffle=False, collate_fn=collate_rna)
 
         fold_config = {**config, "iteration_id": f"{config['iteration_id']}_fold{fold_idx}"}
-        model = create_model(config["model_type"])
+        model = create_model(config["model_type"], **_model_kwargs(config))
         trainer = Trainer(model, fold_config)
         result = trainer.fit(train_loader, val_loader)
         fold_results.append(result)
@@ -148,7 +164,7 @@ def _train_dummy(config: dict) -> dict:
     train_loader = DataLoader(train_ds, batch_size=config["batch_size"], shuffle=True, collate_fn=collate_rna)
     val_loader = DataLoader(val_ds, batch_size=config["batch_size"], shuffle=False, collate_fn=collate_rna)
 
-    model = create_model(config["model_type"])
+    model = create_model(config["model_type"], **_model_kwargs(config))
     trainer = Trainer(model, config)
     result = trainer.fit(train_loader, val_loader)
 

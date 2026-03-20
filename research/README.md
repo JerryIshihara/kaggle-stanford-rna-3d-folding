@@ -11,6 +11,10 @@ Track research and idea generation for each iteration. Every iteration must prod
 | [research_IT001.md](research_IT001.md) | IT001 | All | Competition analysis, approach survey, pipeline bootstrap |
 | [research_IT002.md](research_IT002.md) | IT002 | All | Competition landscape analysis, state-of-the-art approaches |
 | [research_IT003.md](research_IT003.md) | IT003 | data_processor, inferencer | Feature engineering — MSA, secondary structure, BPPM, RNA-FM, co-evolution, positional encoding |
+| [research_IT004_gnn_transformer.md](research_IT004_gnn_transformer.md) | IT004 | inferencer, data_processor, scripts | GNN (EGNN-style) and Transformer (pre-norm + pair bias) architectures for RNA 3D structure prediction |
+| [research_IT005_template_diversity.md](research_IT005_template_diversity.md) | IT005 | submissions | Multi-template diversity, Kabsch blend, TM-score validation |
+| [research_IT006_ss_refinement.md](research_IT006_ss_refinement.md) | IT006 | submissions | SS-guided refinement, expanded template bank, Nussinov prediction |
+| [research_IT007_distance_geometry.md](research_IT007_distance_geometry.md) | IT007 | submissions | Distance geometry de novo, SA refinement, max-dispersion diversity |
 
 ## Filename Convention
 

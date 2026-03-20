@@ -49,3 +49,13 @@
 - **Competition data**: MSA files provided as FASTA for each target (e.g., MSA/1A4D.MSA.fasta).
 - **Co-evolution signals**: Pairs of positions that mutate together suggest structural contacts. Used in contact prediction (DCA, plmDCA). Not yet exploited in our pipeline.
 - **Conservation scores**: Highly conserved positions are often in the structural core. Could be used as features for ML models.
+
+## Nussinov Algorithm for Secondary Structure [IT006]
+- **Algorithm**: Dynamic programming to maximize number of base pairs
+- **Scoring**: A-U: 2, G-C: 3 (3 H-bonds), G-U: 1 (wobble pair)
+- **Minimum loop size**: 4 nucleotides (prevents physically impossible hairpins)
+- **Complexity**: O(n³) time, O(n²) space
+- **Limitations**: Simplistic — ignores stacking, pseudoknots, non-canonical pairs
+- **Base-pair distances**: Watson-Crick C1'-C1' distance ~10.5 Å
+- **Use case**: Generate distance constraints for coordinate refinement
+- **Source**: Nussinov et al. (1978)

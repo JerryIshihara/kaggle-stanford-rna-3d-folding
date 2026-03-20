@@ -127,14 +127,31 @@ MODEL_REGISTRY = {
 }
 
 
+def _get_full_registry():
+    """Lazily import and merge GNN/Transformer models to avoid circular imports."""
+    registry = dict(MODEL_REGISTRY)
+    try:
+        from inferencer.gnn_model import RNAGraphModel
+        registry["gnn"] = RNAGraphModel
+    except ImportError:
+        pass
+    try:
+        from inferencer.transformer_model import RNATransformerModel
+        registry["transformer"] = RNATransformerModel
+    except ImportError:
+        pass
+    return registry
+
+
 def create_model(model_type: str = "rnn", **kwargs) -> nn.Module:
     """Factory function to instantiate a model by name.
 
     Parameters
     ----------
-    model_type : one of ``"rnn"`` or ``"cnn"``.
+    model_type : one of ``"rnn"``, ``"cnn"``, ``"gnn"``, or ``"transformer"``.
     **kwargs : forwarded to the model constructor.
     """
-    if model_type not in MODEL_REGISTRY:
-        raise ValueError(f"Unknown model_type={model_type!r}. Choose from {list(MODEL_REGISTRY)}")
-    return MODEL_REGISTRY[model_type](**kwargs)
+    registry = _get_full_registry()
+    if model_type not in registry:
+        raise ValueError(f"Unknown model_type={model_type!r}. Choose from {list(registry)}")
+    return registry[model_type](**kwargs)

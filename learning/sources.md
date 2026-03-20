@@ -57,6 +57,25 @@ All URLs, papers, notebooks, and references encountered across iterations. Tagge
 
 Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.554. Tight competition.
 
+## GNN and Transformer References [IT004]
+
+| Title | URL | Iteration | Relevance |
+|-------|-----|-----------|-----------|
+| EGNN: E(n) Equivariant Graph Neural Networks (Satorras et al.) | https://github.com/vgsatorras/egnn | IT004 | Foundation for RNAGraphModel — equivariant message passing with coordinate updates |
+| EGNN PyTorch (lucidrains) | https://github.com/lucidrains/egnn-pytorch | IT004 | Clean PyTorch implementation of EGNN |
+| SE3-Transformer PyTorch (lucidrains) | https://github.com/lucidrains/se3-transformer-pytorch | IT004 | SE(3)-equivariant self-attention, AlphaFold2 integration |
+| RhoFold+ (Chen et al.) | https://www.nature.com/articles/s41592-024-02487-0 | IT004 | RNA language model + IPA module, state-of-the-art RNA structure prediction |
+| trRosettaRNA (Yang Lab) | https://www.nature.com/articles/s41467-023-42528-4 | IT004 | Transformer for RNA distance/geometry prediction + Rosetta energy minimization |
+| EquiRNA (ICLR 2025) | https://proceedings.iclr.cc/paper_files/paper/2025/file/691fe5a436d53e23c08fbbb2da529617-Paper-Conference.pdf | IT004 | E(3)-equivariant GeoGNN with size-insensitive K-NN for RNA |
+| DeepFoldRNA | https://system.wisacad-pub.com/index.php/bc/article/view/36 | IT004 | GNN for RNA 3D structure, 28% RMSD improvement, TM-score 0.82 |
+| GraphFold3D (Stanford CS224W) | https://medium.com/stanford-cs224w/graphfold3d-predicting-rna-tertiary-structure-from-secondary-structure-using-graph-neural-networks-2f6282909303 | IT004 | GNN predicting tertiary from secondary structure |
+| GVP (Jing et al., ICLR 2021) | https://github.com/drorlab/gvp-pytorch | IT004 | Geometric Vector Perceptron for equivariant message passing |
+| RNA 3D Structure-Function Benchmark | https://arxiv.org/html/2503.21681v1 | IT004 | Comprehensive benchmark with GNN baselines using rnaglib |
+| Graphein RNA Tutorial | https://graphein.ai/notebooks/rna_graph_tutorial.html | IT004 | RNA graph construction library (node/edge types) |
+| DTU Kaggle RNA Solution | https://www.kaggle.com/code/olaflundstrom/stanford-rna-3d-folding-kaggle-competition-dtu | IT004 | Competition solution notebook |
+| RibonanzaNet2 on Kaggle Models | https://www.kaggle.com/competitions/stanford-rna-3d-folding/models | IT004 | Top-scoring model (0.632), Transformer+CNN architecture |
+| Transformers in RNA Structure Prediction (Review) | https://www.sciencedirect.com/science/article/pii/S200103702500090X | IT004 | Comprehensive review of Transformer approaches for RNA |
+
 ## Internal Debugging Insights [SUB001 -> SUB002]
 
 | Finding | Source | Impact |
@@ -105,3 +124,20 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | train_labels has only structure 1 (x_1, y_1, z_1) | Data format analysis | val_labels has 40 structures, sample_submission needs 5 structures. |
 | Test sequences: 28 targets, lengths 19-4640 | Data format analysis | Most targets are short (mean 349), one long target (4640 nt). |
 | Competition data IS available at /kaggle/input/stanford-rna-3d-folding-2/ | Public notebook analysis | Path is correct; SUB003 failure was likely a dataset versioning/mount issue. |
+
+### Sources Added in IT006
+
+| Source | Type | Relevance |
+|---|---|---|
+| RNABaselineModel (Kaggle model by Andrometocs) | Kaggle model | Template + rules baseline, score 0.364 TM. Uses BioPython pairwise2, base-pair attraction for low-confidence, de novo fold. [IT006] |
+| Nussinov et al. (1978) - RNA folding algorithm | Algorithm | Secondary structure prediction via DP. Used for base-pair distance constraints in IT006. |
+| GARN3 (bioRxiv 2025.07.05.663322) | Paper | Coarse-grained helix-centered RNA 3D prediction with ML scoring. [IT006] |
+| TiRNA (PMC12802904) | Paper | Coarse-grained method with temperature/ion effects for RNA folding. [IT006] |
+| NuFold (Nature 2025, s41467-025-56261-7) | Paper | End-to-end RNA tertiary structure with flexible nucleobase representation. [IT006] |
+| Template-based RNA prediction (bioRxiv 2025.12.30.696949) | Paper | Winning approach from RNA 3D Folding Part 1: template discovery without DL outperformed pure DL. [IT006] |
+| Crippen & Havel (1988) - Distance Geometry and Molecular Conformation | Book | Classical MDS for embedding predicted pairwise distances into 3D coordinates. Foundation for de novo coordinate generation. [IT007] |
+| SimRNA (Boniecki et al., 2016, NAR, PMC4838351) | Paper | Coarse-grained simulated annealing for RNA 3D prediction. Inspires SA-style refinement with temperature schedule. [IT007] |
+| Template-based RNA structure prediction (PMC12776560) | Paper | Blind code competition showing template-based modeling without DL wins. RNAPro integrated model outperforms individuals. [IT007] |
+| DRfold2 (PLOS Biology 2026) | Paper | Composite language modeling for RNA structure, 100% improvement in contact prediction. [IT007] |
+| RibonanzaNet2 (Kaggle model, shujun717) | Kaggle model | PyTorch model for RNA 3D structure, 0.40 TM on competition LB. Potential integration target. [IT007] |
+| RibonanzaNet (github.com/Shujun-He/RibonanzaNet) | GitHub | Source code for RibonanzaNet, MIT license. ConvTransformer + triangular attention architecture. [IT007] |
