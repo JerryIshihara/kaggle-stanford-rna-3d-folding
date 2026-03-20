@@ -10,6 +10,7 @@ Store implementation plans before coding. Every iteration must produce a plan ar
 |------|-------------|-------------------|--------------|
 | [plan_IT001.md](plan_IT001.md) | IT001 | All | Full pipeline bootstrap: directories, code, docs, agent rules |
 | [plan_IT002.md](plan_IT002.md) | IT002 | data_processor, inferencer | Template-based pipeline: PDB database, alignment, coordinate transfer |
+| [plan_IT003_sentinel_fix.md](plan_IT003_sentinel_fix.md) | IT003 | submissions, optimizer | Sentinel value fix, masked loss, robust paths |
 | [plan_IT004_gnn_transformer.md](plan_IT004_gnn_transformer.md) | IT004 | inferencer, data_processor, scripts, configs | GNN and Transformer architecture implementation and pipeline integration |
 
 ## Filename Convention
