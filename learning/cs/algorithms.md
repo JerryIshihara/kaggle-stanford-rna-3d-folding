@@ -40,6 +40,36 @@
 - **Edge case**: For terminal gaps (no left or right neighbor), extrapolates using estimated local backbone direction.
 - **Use in pipeline**: After coordinate transfer from template to query via alignment, gapped positions (insertions relative to template) need coordinates. Interpolation provides reasonable initial guesses.
 
+## TM-Score Computation [IT005]
+
+- **What**: Template Modeling score — a metric for evaluating structural similarity independent of protein/RNA length.
+- **Formula**: TM = (1/L) * sum(1 / (1 + (d_i / d0)^2)) where d0 = 0.6 * sqrt(L - 0.5) - 2.5
+- **Properties**:
+  - Length-independent: normalized by target length L
+  - Range [0, 1]: 1.0 = identical structures
+  - TM > 0.45: correct global fold (for RNA)
+  - TM > 0.17: better than random
+- **Implementation**: Requires Kabsch superposition first to find optimal R, t, then compute per-residue distances.
+- **Use in pipeline**: Primary metric for competition evaluation. Also used for local validation.
+- **Source**: Zhang & Skolnick, RNA-align. https://zhanggroup.org/RNA-align/
+
+## RNA-Aware NW Scoring [IT005]
+
+- **What**: Modified Needleman-Wunsch scoring that distinguishes transition vs transversion mutations in RNA.
+- **Transitions**: A<->G (purine-purine) or C<->U (pyrimidine-pyrimidine), penalty=-0.5
+- **Transversions**: Purine<->pyrimidine, penalty=-1.5
+- **Rationale**: Transitions are more conservative mutations and sequences with transitions are more likely to share structure.
+- **Use in pipeline**: Improves alignment quality by penalizing structurally disruptive mutations more heavily.
+
+## Multi-Template Blending with Kabsch [IT005]
+
+- **What**: Combine coordinate predictions from multiple templates using Kabsch-aligned weighted average.
+- **How**: 
+  1. Transfer coordinates from each template to query via NW alignment
+  2. Superpose all transfers onto reference (first template) using Kabsch
+  3. Compute weighted average coordinates with similarity-based weights
+- **Use in pipeline**: Produces smoother consensus prediction for one of 5 prediction slots.
+
 ## Sequence Identity [IT002]
 
 - **What**: Fraction of aligned positions where both sequences have the same nucleotide.
