@@ -176,6 +176,7 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 
 ### IT005 — Multi-Template Diverse Prediction
 
+
 - **Iteration ID**: IT005
 - **Title**: Multi-template diversity with Kabsch blend and local TM-score validation
 - **Module**: submissions/
@@ -199,6 +200,35 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
   - Template-based RNA prediction: https://www.biorxiv.org/content/10.64898/2025.12.30.696949v1
 - **Research**: [research/research_IT005_template_diversity.md](research/research_IT005_template_diversity.md)
 - **Plan**: [plans/plan_IT005_template_diversity.md](plans/plan_IT005_template_diversity.md)
+- **Report**: Pending (kernel running on Kaggle)
+- **Checkpoints**: None (template-only approach)
+- **Status**: COMPLETE
+
+---
+
+### IT006 — Secondary Structure Refinement + Expanded Templates
+
+- **Iteration ID**: IT006
+- **Title**: SS-guided coordinate refinement and expanded template bank
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB007.ipynb` (new)
+  - `submissions/submission_SUB007.md` (new)
+- **Functions / Features**:
+  - Expanded template bank: train + validation labels (~5700 templates vs ~2671)
+  - Nussinov secondary structure prediction (base pair prediction)
+  - SS-guided iterative coordinate refinement (bond length + base-pair distance + clash + smoothing)
+  - SS-guided de novo fallback (for targets without good templates)
+  - Larger candidate pool (PREFILTER_TOP=400, ALIGN_TOP=60)
+  - 4-pass iterative constraint satisfaction with decay
+- **Description**: Major enhancement to template-based prediction. Doubles template library by adding validation data, adds RNA secondary structure prediction to constrain coordinates, and provides SS-guided de novo generation for low-template-coverage targets.
+- **Motivation**: SUB006 shows bimodal performance: 6/28 targets > 0.3 TM but 22/28 < 0.1. Expanding templates addresses coverage, SS constraints improve geometry for all targets.
+- **Sources**:
+  - RNABaselineModel (Kaggle model, 0.364 TM): base-pair constraint approach
+  - Nussinov algorithm for secondary structure prediction
+  - bioRxiv 2025: template-based RNA prediction winning approaches
+- **Research**: [research/research_IT006_ss_refinement.md](research/research_IT006_ss_refinement.md)
+- **Plan**: [plans/plan_IT006_ss_refinement.md](plans/plan_IT006_ss_refinement.md)
 - **Report**: Pending (kernel running on Kaggle)
 - **Checkpoints**: None (template-only approach)
 - **Status**: IN PROGRESS
