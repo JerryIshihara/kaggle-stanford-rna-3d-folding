@@ -135,3 +135,9 @@ Key insight: Template methods dominate the leaderboard. Score range is 0.448-0.5
 | TiRNA (PMC12802904) | Paper | Coarse-grained method with temperature/ion effects for RNA folding. [IT006] |
 | NuFold (Nature 2025, s41467-025-56261-7) | Paper | End-to-end RNA tertiary structure with flexible nucleobase representation. [IT006] |
 | Template-based RNA prediction (bioRxiv 2025.12.30.696949) | Paper | Winning approach from RNA 3D Folding Part 1: template discovery without DL outperformed pure DL. [IT006] |
+| Crippen & Havel (1988) - Distance Geometry and Molecular Conformation | Book | Classical MDS for embedding predicted pairwise distances into 3D coordinates. Foundation for de novo coordinate generation. [IT007] |
+| SimRNA (Boniecki et al., 2016, NAR, PMC4838351) | Paper | Coarse-grained simulated annealing for RNA 3D prediction. Inspires SA-style refinement with temperature schedule. [IT007] |
+| Template-based RNA structure prediction (PMC12776560) | Paper | Blind code competition showing template-based modeling without DL wins. RNAPro integrated model outperforms individuals. [IT007] |
+| DRfold2 (PLOS Biology 2026) | Paper | Composite language modeling for RNA structure, 100% improvement in contact prediction. [IT007] |
+| RibonanzaNet2 (Kaggle model, shujun717) | Kaggle model | PyTorch model for RNA 3D structure, 0.40 TM on competition LB. Potential integration target. [IT007] |
+| RibonanzaNet (github.com/Shujun-He/RibonanzaNet) | GitHub | Source code for RibonanzaNet, MIT license. ConvTransformer + triangular attention architecture. [IT007] |

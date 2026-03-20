@@ -232,3 +232,36 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Report**: Pending (kernel running on Kaggle)
 - **Checkpoints**: None (template-only approach)
 - **Status**: IN PROGRESS
+
+---
+
+### IT007 — Distance Geometry De Novo + SA Refinement + Diversity Selection
+
+- **Iteration ID**: IT007
+- **Title**: Distance geometry de novo folding, simulated annealing refinement, max-dispersion diversity
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB008.ipynb` (new)
+  - `submissions/submission_SUB008.md` (new)
+  - `scripts/build_sub008.py` (new) — notebook build script
+- **Functions / Features**:
+  - `distance_geometry_fold()` — MDS-based 3D coordinate embedding from predicted distance matrix
+  - `_mds_subsampled()` — Subsampled MDS for large structures (> 500 residues)
+  - `_enforce_backbone()` — Iterative backbone distance enforcement
+  - `sa_refine_coordinates()` — Simulated annealing with temperature schedule (25-30 iterations)
+  - `select_diverse_predictions()` — Greedy max-dispersion diversity selection (10 → 5)
+  - `compute_rmsd()` — RMSD computation for diversity matrix
+  - i,i+3 distance constraints (A-form helix 13.5 Å)
+  - Stacking distance constraints (~3.4 Å for consecutive paired bases)
+  - Generate 10 candidate predictions per target, select 5 most diverse
+- **Description**: Three-pronged improvement to address the bimodal performance distribution. (1) Replace simplistic sequential de novo folding with distance geometry (eigendecomposition of doubly-centered distance matrix); (2) Replace fixed 4-pass constraints with 25-iteration SA refinement with temperature schedule; (3) Optimize best-of-5 metric by generating 10 candidates and selecting the 5 most structurally diverse.
+- **Motivation**: 22/28 targets score < 0.1 due to poor de novo fallback. Current fixed 5-slot strategy doesn't optimize for diversity. SA refinement is more effective than fixed-strength passes.
+- **Sources**:
+  - Crippen & Havel (1988): Distance Geometry and Molecular Conformation
+  - SimRNA (Boniecki et al., 2016): Coarse-grained SA for RNA folding
+  - PMC 2025: Template-based RNA prediction competition analysis
+- **Research**: [research/research_IT007_distance_geometry.md](research/research_IT007_distance_geometry.md)
+- **Plan**: [plans/plan_IT007_distance_geometry.md](plans/plan_IT007_distance_geometry.md)
+- **Report**: Pending (kernel running on Kaggle)
+- **Checkpoints**: None (template-only approach)
+- **Status**: IN PROGRESS
