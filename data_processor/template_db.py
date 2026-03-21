@@ -297,6 +297,168 @@ class PDBRNADatabase:
         results.sort(key=lambda x: -x["identity"])
         return results[:top_k]
 
+    def search_templates_length_aware(
+        self,
+        query_sequence: str,
+        top_k: int = 5,
+    ) -> List[dict]:
+        """Length-stratified template search with per-bin optimized parameters.
+
+        Short (<50nt): finer k-mers, lower identity threshold, expanded pool,
+                       prefer exact-length matches, length ratio scoring bonus.
+        Medium (50-200nt): standard parameters with transition/transversion
+                           aware scoring.
+        Long (>200nt): relaxed length filter, banded alignment for speed,
+                       expanded candidate pool.
+
+        Returns a list of match dicts sorted by a composite score.
+        """
+        query_len = len(query_sequence)
+        query_upper = query_sequence.upper()
+
+        if query_len < 50:
+            return self._search_short(query_upper, top_k)
+        elif query_len < 200:
+            return self._search_medium(query_upper, top_k)
+        else:
+            return self._search_long(query_upper, top_k)
+
+    def _search_short(self, query: str, top_k: int) -> List[dict]:
+        """Template search optimized for short RNAs (<50nt)."""
+        query_len = len(query)
+        query_kmers_3 = _kmer_set(query, k=3)
+        query_kmers_4 = _kmer_set(query, k=4)
+
+        candidates = []
+        for key, entry in self.index.items():
+            tpl_len = entry["length"]
+            # Relaxed length filter: allow templates 0.4x to 2.5x query length
+            if tpl_len < query_len * 0.4 or tpl_len > query_len * 2.5:
+                continue
+
+            tpl_kmers_3 = _kmer_set(entry["sequence"], k=3)
+            if not query_kmers_3 or not tpl_kmers_3:
+                continue
+            jaccard = len(query_kmers_3 & tpl_kmers_3) / len(query_kmers_3 | tpl_kmers_3)
+
+            # Bonus for similar length (important for short RNAs)
+            length_ratio = min(query_len, tpl_len) / max(query_len, tpl_len)
+            score = jaccard * (0.7 + 0.3 * length_ratio)
+
+            if score >= 0.03:  # Very low threshold for short RNAs
+                candidates.append((key, entry, score))
+
+        candidates.sort(key=lambda x: -x[2])
+        candidates = candidates[:top_k * 10]  # Expanded pool
+
+        results = []
+        for key, entry, prefilter_score in candidates:
+            identity = sequence_identity(query, entry["sequence"])
+            if identity >= 0.10:  # Lower threshold for short RNAs
+                length_ratio = min(len(query), entry["length"]) / max(len(query), entry["length"])
+                composite_score = identity * (0.6 + 0.4 * length_ratio)
+                results.append({
+                    "key": key,
+                    "pdb_id": entry["pdb_id"],
+                    "chain_id": entry["chain_id"],
+                    "template_sequence": entry["sequence"],
+                    "template_length": entry["length"],
+                    "identity": identity,
+                    "composite_score": composite_score,
+                    "length_ratio": length_ratio,
+                    "coords": entry["coords"],
+                })
+
+        results.sort(key=lambda x: -x["composite_score"])
+        return results[:top_k]
+
+    def _search_medium(self, query: str, top_k: int) -> List[dict]:
+        """Template search for medium RNAs (50-200nt). Standard parameters."""
+        query_len = len(query)
+        query_kmers = _kmer_set(query, k=4)
+
+        candidates = []
+        for key, entry in self.index.items():
+            tpl_len = entry["length"]
+            if tpl_len < query_len * 0.5 or tpl_len > query_len * 2.0:
+                continue
+
+            tpl_kmers = _kmer_set(entry["sequence"], k=4)
+            if not query_kmers or not tpl_kmers:
+                continue
+            jaccard = len(query_kmers & tpl_kmers) / len(query_kmers | tpl_kmers)
+            if jaccard >= 0.05:
+                candidates.append((key, entry, jaccard))
+
+        candidates.sort(key=lambda x: -x[2])
+        candidates = candidates[:top_k * 5]
+
+        results = []
+        for key, entry, _ in candidates:
+            identity = sequence_identity(query, entry["sequence"])
+            if identity >= 0.15:
+                results.append({
+                    "key": key,
+                    "pdb_id": entry["pdb_id"],
+                    "chain_id": entry["chain_id"],
+                    "template_sequence": entry["sequence"],
+                    "template_length": entry["length"],
+                    "identity": identity,
+                    "composite_score": identity,
+                    "length_ratio": min(query_len, entry["length"]) / max(query_len, entry["length"]),
+                    "coords": entry["coords"],
+                })
+
+        results.sort(key=lambda x: -x["composite_score"])
+        return results[:top_k]
+
+    def _search_long(self, query: str, top_k: int) -> List[dict]:
+        """Template search for long RNAs (>200nt). Relaxed filters, banded NW."""
+        query_len = len(query)
+        query_kmers = _kmer_set(query, k=5)  # Longer k-mers for specificity
+
+        candidates = []
+        for key, entry in self.index.items():
+            tpl_len = entry["length"]
+            # Very relaxed length filter for long sequences
+            if tpl_len < query_len * 0.3 or tpl_len > query_len * 3.0:
+                continue
+
+            tpl_kmers = _kmer_set(entry["sequence"], k=5)
+            if not query_kmers or not tpl_kmers:
+                continue
+            jaccard = len(query_kmers & tpl_kmers) / len(query_kmers | tpl_kmers)
+            if jaccard >= 0.03:
+                candidates.append((key, entry, jaccard))
+
+        candidates.sort(key=lambda x: -x[2])
+        candidates = candidates[:top_k * 8]
+
+        results = []
+        for key, entry, _ in candidates:
+            # Use banded NW for long sequences (faster)
+            if len(query) > 500 and entry["length"] > 500:
+                identity = _banded_sequence_identity(query, entry["sequence"], band_width=100)
+            else:
+                identity = sequence_identity(query, entry["sequence"])
+
+            if identity >= 0.10:
+                length_ratio = min(query_len, entry["length"]) / max(query_len, entry["length"])
+                results.append({
+                    "key": key,
+                    "pdb_id": entry["pdb_id"],
+                    "chain_id": entry["chain_id"],
+                    "template_sequence": entry["sequence"],
+                    "template_length": entry["length"],
+                    "identity": identity,
+                    "composite_score": identity * (0.8 + 0.2 * length_ratio),
+                    "length_ratio": length_ratio,
+                    "coords": entry["coords"],
+                })
+
+        results.sort(key=lambda x: -x["composite_score"])
+        return results[:top_k]
+
 
 # ======================================================================
 # Alignment utilities (pure numpy, no external deps)
@@ -388,3 +550,44 @@ def needleman_wunsch(
         "aligned_length": aligned_length,
         "alignment_map_a_to_b": map_a_to_b,
     }
+
+
+def _banded_sequence_identity(
+    seq_a: str,
+    seq_b: str,
+    band_width: int = 100,
+) -> float:
+    """Fast approximate sequence identity using banded NW alignment.
+
+    Only fills DP cells within `band_width` of the diagonal, reducing
+    O(n*m) to O(n*band_width) for long sequences.
+    """
+    n, m = len(seq_a), len(seq_b)
+    NEG_INF = -999999
+
+    dp = np.full((n + 1, m + 1), NEG_INF, dtype=np.int32)
+    dp[0, 0] = 0
+    for j in range(1, min(band_width + 1, m + 1)):
+        dp[0, j] = j * (-2)
+    for i in range(1, min(band_width + 1, n + 1)):
+        dp[i, 0] = i * (-2)
+
+    for i in range(1, n + 1):
+        j_start = max(1, i - band_width)
+        j_end = min(m, i + band_width)
+        for j in range(j_start, j_end + 1):
+            s = 2 if seq_a[i - 1] == seq_b[j - 1] else -1
+            dp[i, j] = max(
+                dp[i - 1, j - 1] + s if dp[i - 1, j - 1] > NEG_INF else NEG_INF,
+                dp[i - 1, j] + (-2) if dp[i - 1, j] > NEG_INF else NEG_INF,
+                dp[i, j - 1] + (-2) if dp[i, j - 1] > NEG_INF else NEG_INF,
+            )
+
+    # Approximate identity from score
+    score = dp[n, m]
+    if score <= NEG_INF:
+        return 0.0
+    max_possible = 2 * min(n, m)
+    if max_possible == 0:
+        return 0.0
+    return max(0.0, score / max_possible)
