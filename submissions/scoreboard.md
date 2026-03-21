@@ -14,6 +14,7 @@ Master scoreboard for full-pipeline performance tracking.
 | SUB006 | IT005 | IT005 (fragment assembly) | N/A | IT005 (TM-score) | N/A | Val: 0.179 mean | Pending | Pending | - | SUBMITTED | Fragment assembly, per-chain prediction, 6/28 > 0.3 TM |
 | SUB007 | IT006 | IT006 (SS refinement) | N/A | IT005 (TM-score) | N/A | Pending | Pending | Pending | - | SUBMITTED | Expanded templates (~5700), Nussinov SS constraints, SS de novo fallback |
 | SUB008 | IT006 | IT007 (dist geometry + SA) | N/A | IT005 (TM-score) | N/A | Pending | Pending | Pending | - | SUBMITTED | Distance geometry de novo, SA refinement, max-dispersion diversity |
+| SUB009 | IT006 | IT008 (neural refinement) | IT008 (in-kernel training) | IT005 (TM-score) | N/A | Pending | Pending | Pending | - | READY | Neural Transformer trained on 2671 seqs; template-neural hybrid ensemble; MC-dropout diversity |
 
 ## Status Definitions
 

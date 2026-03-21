@@ -54,7 +54,7 @@ See [iteration_registry.md](iteration_registry.md) for the full iteration log.
 
 | Iteration | Module | Description | Score Impact |
 |-----------|--------|-------------|-------------|
-| *(none yet)* | | | |
+| IT008 | inferencer | Neural Coordinate Refinement: RNATransformerModel (6-layer, d_model=128) trained in-kernel on 2671 competition sequences; MC-dropout diversity; template-neural Kabsch blend for partial-coverage targets; extends IT007 candidate pool to 14 → select 5 via max-dispersion (SUB009, Status: READY) | Expected +0.03–0.12 LB |
 
 ### Rejected Ideas
 

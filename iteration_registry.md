@@ -235,3 +235,35 @@ Global registry of all iterations for the Stanford RNA 3D Folding 2 pipeline.
 - **Report**: Pending (kernel running on Kaggle)
 - **Checkpoints**: None (template-only approach)
 - **Status**: IN PROGRESS
+
+---
+
+### IT008 — Neural Coordinate Refinement + Template-Neural Hybrid
+
+- **Iteration ID**: IT008
+- **Title**: Train RNATransformerModel on competition data + template-neural hybrid ensemble
+- **Module**: submissions/
+- **Files**:
+  - `submissions/submission_SUB009.ipynb` (new)
+  - `submissions/submission_SUB009.md` (new)
+- **Functions / Features**:
+  - `RNATransformerModel` (inlined, `use_pair_bias=False`, `max_len=4096`) — 1.15M params
+  - `BucketBatchSampler` — length-bucketed batching to avoid OOM
+  - `train_neural_model()` — AdamW + CosineAnnealingLR + AMP + early stopping
+  - `neural_predict()` — deterministic inference for a single sequence
+  - `neural_mc_predict()` — MC-dropout diversity (model.train() at inference)
+  - `sliding_window_predict()` — for sequences > 2048 nt (4640 nt outlier)
+  - Combined 14-candidate pool per target → max-dispersion selects 5
+  - Template-neural Kabsch blend for partial-coverage targets (identity 0.1-0.3)
+- **Description**: Trains a 6-layer Transformer on 2671 training sequences to learn a sequence-to-structure prior. The neural model fills the gap for 22/28 test targets with poor template coverage, where the current IT007 pipeline produces near-random coordinates. A combined candidate pool (IT007 template candidates + neural det + neural MC-dropout) is filtered to 5 maximally diverse predictions per target via max-dispersion greedy selection.
+- **Motivation**: 22/28 test targets score < 0.1 TM due to poor template coverage. Neural model provides non-zero structural signal from sequence alone. IT007 reports explicitly recommend neural refinement as highest-priority next step.
+- **Sources**:
+  - RibonanzaNet (Kaggle 2023): Transformer+CNN for RNA, achieves ~0.40 TM with larger model
+  - RhoFold+ (Nature Methods 2024): RNA-FM + IPA module — architecture inspiration
+  - IT004a validation: confirmed RNATransformerModel works on dummy data
+  - IT003 sentinel fix: masked_mse_loss, sentinel detection for training labels
+- **Research**: [research/research_IT008_neural_refinement.md](research/research_IT008_neural_refinement.md)
+- **Plan**: [plans/plan_IT008_neural_refinement.md](plans/plan_IT008_neural_refinement.md)
+- **Report**: Pending (kernel to run on Kaggle)
+- **Checkpoints**: None (in-kernel training, best state saved in memory)
+- **Status**: IN_PROGRESS
