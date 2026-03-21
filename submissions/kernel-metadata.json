@@ -1,14 +1,16 @@
 {
-  "id": "jerryishihara/stanford-rna-3d-template-refinement",
-  "title": "Stanford RNA 3D Template Refinement v10",
-  "code_file": "submission_SUB010.ipynb",
+  "id": "jerryishihara/stanford-rna-3d-template-refinement-v11",
+  "title": "Stanford RNA 3D Template Refinement v11",
+  "code_file": "submission_SUB011.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": "true",
   "enable_gpu": "true",
   "enable_tpu": "false",
   "enable_internet": "false",
-  "dataset_sources": [],
+  "dataset_sources": [
+    "rhijudas/rna-3d-folding-templates"
+  ],
   "competition_sources": [
     "stanford-rna-3d-folding-2"
   ],
