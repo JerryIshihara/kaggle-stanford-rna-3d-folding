@@ -115,7 +115,7 @@ os.environ["NO_FLASH_ATTN"]   = "1"
 
 # ── Extract notebook cells ────────────────────────────────────────────────────
 NB_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "submissions", "submission_SUB015.ipynb"
+    os.path.dirname(__file__), "..", "submissions", "submission_SUB017.ipynb"
 )
 with open(NB_PATH) as f:
     nb = json.load(f)
